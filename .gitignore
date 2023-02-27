@@ -1,0 +1,13 @@
+/.idea
+/.bsp
+/target
+/project
+/test_run_dir
+/*.gtkw
+/*.v
+/*.fir
+/*.anno.json
+/firrtl_black_box_resource_files.f
+/**/*.runs
+/**/*.cache
+/**/*.hw
