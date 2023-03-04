@@ -1,10 +1,10 @@
-package click
+package async.blocks
 
-import util.Helper._
+import async._
+import async.Helper._
 import chisel3._
-import handshake.Handshake
 
-class Barrier[T <: Data](gen:  T) extends Module {
+private class Barrier[T <: Data](gen:  T) extends Module {
 
   val io = IO(new Bundle {
     val in = Flipped(Handshake(gen))
@@ -25,5 +25,9 @@ object Barrier {
       _.enable := en
     )
     barrier.io.out
+  }
+
+  implicit class Blocker[T <: Data](x: Handshake[T]) {
+    def block(en: Bool): Handshake[T] = Barrier(x, en)
   }
 }

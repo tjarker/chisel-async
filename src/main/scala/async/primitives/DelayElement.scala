@@ -1,4 +1,4 @@
-package primitives
+package async.primitives
 
 import chisel3._
 
@@ -14,7 +14,7 @@ object DelayElement {
   object Xilinx {
 
     class XilinxLUT1Delay extends DelayElement {
-      val lut = Module(new LUT1Wrapper(Map(false -> true, true -> false)))
+      val lut = Module(new LUT1Wrapper(0.B, 1.B))
       lut.io.in := io.in
       io.out := lut.io.out
     }

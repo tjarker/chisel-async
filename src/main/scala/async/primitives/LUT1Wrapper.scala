@@ -1,12 +1,12 @@
-package primitives
+package async.primitives
 
+import async.primitives.LUT1Wrapper.genInit
 import chisel3._
 import chisel3.util.HasBlackBoxInline
-import primitives.LUT1Wrapper.truthTableToInit
 
 
-class LUT1Wrapper(truthTable: Map[Boolean, Boolean]) extends BlackBox(Map(
-  "init" -> truthTableToInit(truthTable)
+class LUT1Wrapper(f0: Bool, f1: Bool) extends BlackBox(Map(
+  "init" -> genInit(f0, f1)
 )) with HasBlackBoxInline {
 
   val io = IO(new Bundle {
@@ -30,5 +30,5 @@ class LUT1Wrapper(truthTable: Map[Boolean, Boolean]) extends BlackBox(Map(
 }
 
 object LUT1Wrapper {
-  def truthTableToInit(truthTable: Map[Boolean, Boolean]) = (if(truthTable(true)) 2 else 0) | (if(truthTable(false)) 1 else 0)
+  def genInit(f0: Bool, f1: Bool) = (if(f0.litToBoolean) 1 else 0) | (if(f1.litToBoolean) 2 else 0)
 }

@@ -1,8 +1,8 @@
-package util
-
+package async
 
 import chisel3._
 import chisel3.experimental.requireIsHardware
+
 
 object Helper {
 
@@ -51,22 +51,21 @@ object Helper {
 
   def synchronize[T <: Data](x: T): T = RegNext(RegNext(x, 0.U.asTypeOf(x)), 0.U.asTypeOf(x))
 
-  def toggle(x: Bool): Bool = {
-
-    val synced = synchronize(x)
-    val toggler = RegInit(0.B)
-
-    when(!RegNext(synced, 0.B) && synced) { toggler := !toggler }
-
-    toggler
-
-  }
+  def risingEdge(x: Bool) = x && !RegNext(x, 0.B)
 
   object ToggleReg {
-    def apply(init: Bool): Bool = {
+    def apply(init: Bool, event: Bool = 1.B): Bool = {
       val toggleReg = RegInit(init)
-      toggleReg := !toggleReg
+      when(event) { toggleReg := !toggleReg }
       toggleReg
+    }
+  }
+
+  object SetReg {
+    def apply(event: Bool): Bool = {
+      val setReg = RegInit(0.B)
+      when(event) { setReg := 1.B }
+      setReg
     }
   }
 
