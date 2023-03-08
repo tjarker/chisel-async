@@ -2,6 +2,10 @@ package async
 
 import chisel3._
 import chisel3.experimental.requireIsHardware
+import chisel3.internal.firrtl.Width
+import chisel3.util.log2Ceil
+
+import scala.language.implicitConversions
 
 
 object Helper {
@@ -20,6 +24,12 @@ object Helper {
       assignments.foreach(f => f(b))
       b
     }
+  }
+
+  implicit def RangeToWidth(x: Range): Width = log2Ceil(x.max + 1).W
+
+  implicit class UIntFactoryExtension(x: chisel3.UInt.type) {
+    def apply(range: Range): UInt = UInt(log2Ceil(range.max + 1).W)
   }
 
   implicit class SeqToChiselVec[T <: Data](x: Seq[T]) {
