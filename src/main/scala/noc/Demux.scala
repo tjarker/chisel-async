@@ -6,10 +6,15 @@ import chisel3._
 import noc.Helper.GridBuilder
 
 trait Direction
+case object Local extends Direction
 case object North extends Direction
-case object South extends Direction
-case object East extends Direction
+case object NorthWest extends Direction
 case object West extends Direction
+case object SouthWest extends Direction
+case object South extends Direction
+case object SouthEast extends Direction
+case object East extends Direction
+case object NorthEast extends Direction
 
 class Demux[P <: Data](pgen: P, fs: Seq[(Direction, Header => Bool)]) extends Module {
 
@@ -28,6 +33,10 @@ class Demux[P <: Data](pgen: P, fs: Seq[(Direction, Header => Bool)]) extends Mo
 
 }
 object Demux {
+
+  val directionMap = Map(
+    North -> Seq()
+  )
 
   def apply[P <: Data](channel: Handshake[Packet[P]], fs: Seq[(Direction, Header => Bool)]): Seq[(Direction, Handshake[Packet[P]])] = {
     val module = Module(new Demux(chiselTypeOf(channel.payload.payload), fs))
