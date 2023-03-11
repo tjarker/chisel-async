@@ -14,7 +14,6 @@ class Packet[P <: Data](payloadGen: P, p: NocParameters) extends Bundle {
 }
 
 
-
 class Header(p: NocParameters) extends Bundle {
   val destination = Coordinate(p.size)
   val sign = new Bundle {
