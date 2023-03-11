@@ -19,7 +19,7 @@ private class Barrier[T <: Data](gen:  T) extends Module {
 
 object Barrier {
   def apply[T <: Data](in: Handshake[T], en: Bool): Handshake[T] = {
-    val barrier = Module(new Barrier(chiselTypeOf(in.payload)))
+    val barrier = Module(new Barrier(chiselTypeOf(in.data)))
     barrier.io.expand(
       _.in <> in,
       _.enable := en

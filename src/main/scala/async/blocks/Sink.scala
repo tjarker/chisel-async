@@ -18,5 +18,5 @@ class Sink[T <: Data](gen: T) extends Module {
 }
 
 object Sink {
-  def apply[T <: Data](in: Handshake[T]): Unit = Module(new Sink(chiselTypeOf(in.payload))).i <> in
+  def apply[T <: Data](in: Handshake[T]): Unit = Module(new Sink(chiselTypeOf(in.data))).i <> in
 }

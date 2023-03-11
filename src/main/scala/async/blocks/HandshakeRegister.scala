@@ -17,9 +17,9 @@ class HandshakeRegister[T <: Data](gen: T, init: HandshakeInitializer[T]) extend
 
     i.ack := ToggleReg(0.B)
     o.req := ToggleReg(init.hasToken.B)
-    o.payload := (init match {
-      case Empty => RegNext(i.payload)
-      case Token(value) => RegNext(i.payload, value)
+    o.data := (init match {
+      case Empty => RegNext(i.data)
+      case Token(value) => RegNext(i.data, value)
     })
 
   }
@@ -42,7 +42,7 @@ object HandshakeRegister {
 
 object HandshakeRegisterNext {
   def apply[T <: Data](next: Handshake[T], init: HandshakeInitializer[T]): Handshake[T] = {
-    val handshakeRegister = HandshakeRegister(chiselTypeOf(next.payload), init)
+    val handshakeRegister = HandshakeRegister(chiselTypeOf(next.data), init)
     handshakeRegister.i <> next
     handshakeRegister.o
   }

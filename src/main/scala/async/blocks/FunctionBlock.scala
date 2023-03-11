@@ -14,14 +14,14 @@ private class FunctionBlock[A <: Data, B <: Data](gens: (A,B), fun: A => B, dela
   i.ack := o.ack
   o.expand(
     _.req := i.req.addDelay(delay),
-    _.payload := fun(i.payload)
+    _.data := fun(i.data)
   )
 }
 
 object FunctionBlock {
 
   def apply[A <: Data, B <: Data](in: Handshake[A], delay: Int)(fun: A => B)(implicit delayElementConfig: DelayElementConfig): Handshake[B] = {
-    val functionBlock = Module(new FunctionBlock(chiselTypeOf(in.payload) -> chiselTypeOf(fun(in.payload)), fun, delay))
+    val functionBlock = Module(new FunctionBlock(chiselTypeOf(in.data) -> chiselTypeOf(fun(in.data)), fun, delay))
     functionBlock.i <> in
     functionBlock.o
   }

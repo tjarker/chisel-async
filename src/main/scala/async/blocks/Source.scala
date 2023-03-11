@@ -12,7 +12,7 @@ class Source[T <: Data](token: T) extends Module {
 
   withClockAndReset(click.asClock, reset.asAsyncReset) {
     o.req := ToggleReg(1.B)
-    o.payload := token
+    o.data := token
   }
 
 }

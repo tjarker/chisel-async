@@ -16,7 +16,7 @@ private class Fork[T <: Data](n: Int, gen: T) extends Module {
     i.ack := ToggleReg(0.B)
     o.foreach { _.expand(
       _.req := i.req,
-      _.payload := i.payload
+      _.data := i.data
     )
     }
   }
@@ -25,7 +25,7 @@ private class Fork[T <: Data](n: Int, gen: T) extends Module {
 
 object Fork {
   def apply[T <: Data](n: Int, in: Handshake[T]): Vec[Handshake[T]] = {
-    val fork = Module(new Fork(n, chiselTypeOf(in.payload)))
+    val fork = Module(new Fork(n, chiselTypeOf(in.data)))
     fork.i <> in
     fork.o
   }

@@ -26,7 +26,7 @@ package object async {
   class Handshake[T <: Data](gen: T) extends Bundle {
     val req = Output(Bool())
     val ack = Input(Bool())
-    val payload = Output(gen)
+    val data = Output(gen)
   }
 
   object Handshake {

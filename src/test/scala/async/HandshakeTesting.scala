@@ -24,7 +24,7 @@ object HandshakeTesting {
     }
 
     def send(data: T): Unit = {
-      x.payload.poke(data)
+      x.data.poke(data)
       x.req.poke((!x.req.peekBoolean()).B)
       val old = x.ack.peekBoolean()
       while (old == x.ack.peekBoolean()) {
@@ -67,7 +67,7 @@ object HandshakeTesting {
 
     def receive(): T = {
       waitForToken()
-      val payload = x.payload.peek()
+      val payload = x.data.peek()
       getSinkClock.step(1)
       x.ack.poke((!x.ack.peekBoolean()).B)
       getSinkClock.step(1)
@@ -80,7 +80,7 @@ object HandshakeTesting {
 
     def receiveExpect(data: T): Unit = {
         waitForToken()
-        x.payload.expect(data)
+        x.data.expect(data)
         getSinkClock.step(1)
         x.ack.poke((!x.ack.peekBoolean()).B)
     }

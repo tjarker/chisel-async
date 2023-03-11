@@ -11,13 +11,13 @@ import chisel3._
 object Join {
 
   def apply[A <: Data, B <: Data](left: Handshake[A], right: Handshake[B]): Handshake[Pair[A,B]] = {
-    val join = Module(new Join2(chiselTypeOf(left.payload) -> chiselTypeOf(right.payload)))
+    val join = Module(new Join2(chiselTypeOf(left.data) -> chiselTypeOf(right.data)))
     join.i._1 <> left
     join.i._2 <> right
     join.o
   }
   def apply[A <: Data](x: Handshake[A], xs: Handshake[A]*): Handshake[Vec[A]] = {
-    val join = Module(new JoinX(xs.length + 1, chiselTypeOf(x.payload)))
+    val join = Module(new JoinX(xs.length + 1, chiselTypeOf(x.data)))
     join.i <> (x +: xs).toVec
     join.o
   }
@@ -32,7 +32,7 @@ object Join {
       i.foreach(_.ack := o.ack)
       o.expand(
         _.req := ToggleReg(0.B),
-        _.payload := i.map(_.payload).toVec
+        _.data := i.map(_.data).toVec
       )
     }
   }
@@ -47,7 +47,7 @@ object Join {
       i._2.ack := o.ack
       o.expand(
         _.req := ToggleReg(0.B),
-        _.payload := Pair(i._1.payload, i._2.payload)
+        _.data := Pair(i._1.data, i._2.data)
       )
     }
   }
