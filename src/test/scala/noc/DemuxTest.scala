@@ -18,7 +18,7 @@ class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
     val route = RoutingRule(inDir)
 
 
-    test(new Demux(route.options, localCoordinate, route.routingTable)(p)).withAnnotations(Seq(
+    test(new Demux(route.options, localCoordinate, route.createLogic)(p)).withAnnotations(Seq(
      IcarusBackendAnnotation,
       WriteVcdAnnotation
     )) { dut =>

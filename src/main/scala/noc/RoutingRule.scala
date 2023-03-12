@@ -7,7 +7,7 @@ import noc.Direction._
 // a routing rule describes the paths which can be taken through the router given the inbound direction
 sealed trait RoutingRule {
   // the routing table generates the logic for a one-hot vector where each bit is associated with a direction
-  def routingTable(header: Header, localCoord: Coordinate): Seq[(Direction, Bool)]
+  def createLogic(header: Header, localCoord: Coordinate): (Seq[Direction], Seq[Bool])
   def options: Int // the number of possible paths through the router
 }
 
@@ -20,32 +20,32 @@ object RoutingRule {
     } else if (in.isDiagonal) {
       DiagonalRule(in.opposite, in.opposite.horizontalNeighbor, in.opposite.verticalNeighbor)
     } else if(in.isHorizontal) {
-      HorizontalStraightRule(in.opposite)
+      HorizontalRule(in.opposite)
     } else {
-      VerticalStraightRule(in.opposite)
+      VerticalRule(in.opposite)
     }
 
   // packets which arrive horizontally can only stay or proceed horizontally
-  case class HorizontalStraightRule(straightOption: Direction) extends RoutingRule {
+  case class HorizontalRule(straightOption: Direction) extends RoutingRule {
     def options = 2
-    def routingTable(header: Header, localCoord: Coordinate): Seq[(Direction, Bool)] = {
+    def createLogic(header: Header, localCoord: Coordinate): (Seq[Direction], Seq[Bool]) = {
       val xMatch = header.destination.x === localCoord.x
       Seq(
         Local -> xMatch,
         straightOption -> !xMatch
-      )
+      ).unzip
     }
   }
 
   // packets which arrive vertically can only stay or proceed vertically
-  case class VerticalStraightRule(straightOption: Direction) extends RoutingRule {
+  case class VerticalRule(straightOption: Direction) extends RoutingRule {
     def options = 2
-    def routingTable(header: Header, localCoord: Coordinate): Seq[(Direction, Bool)] = {
+    def createLogic(header: Header, localCoord: Coordinate): (Seq[Direction], Seq[Bool]) = {
       val yMatch = header.destination.y === localCoord.y
       Seq(
         Local -> yMatch,
         straightOption -> !yMatch
-      )
+      ).unzip
     }
   }
 
@@ -53,7 +53,7 @@ object RoutingRule {
   // or proceed diagonally in case no coordinate matches
   case class DiagonalRule(diagonal: Direction, horizontal: Direction, vertical: Direction) extends RoutingRule {
     def options = 4
-    def routingTable(header: Header, localCoord: Coordinate): Seq[(Direction, Bool)] = {
+    def createLogic(header: Header, localCoord: Coordinate): (Seq[Direction], Seq[Bool]) = {
       val xMatch = header.destination.x === localCoord.x
       val yMatch = header.destination.y === localCoord.y
       Seq(
@@ -61,7 +61,7 @@ object RoutingRule {
         diagonal -> (!xMatch && !yMatch),
         horizontal -> (!xMatch && yMatch),
         vertical -> (xMatch && !yMatch)
-      )
+      ).unzip
     }
   }
 
@@ -69,7 +69,7 @@ object RoutingRule {
   // signs of the vector from the current coordinate to the destination coordinate
   case class LocalRule() extends RoutingRule {
     def options = 8
-    def routingTable(header: Header, localCoord: Coordinate): Seq[(Direction, Bool)] = {
+    def createLogic(header: Header, localCoord: Coordinate): (Seq[Direction], Seq[Bool]) = {
       val xMatch = header.destination.x === localCoord.x
       val yMatch = header.destination.y === localCoord.y
       val sdx = header.sign.dx
@@ -84,7 +84,7 @@ object RoutingRule {
         SouthEast -> (takeDiagonal && !sdx && sdy),
         SouthWest -> (takeDiagonal && sdx && sdy),
         NorthWest -> (takeDiagonal && sdx && !sdy)
-      )
+      ).unzip
     }
   }
 }
