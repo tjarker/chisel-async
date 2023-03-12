@@ -1,9 +1,9 @@
 package async.blocks
 
 import async._
-import async.Helper._
 import async.blocks.Delay.BoolDelayer
 import chisel3._
+import helpers.BundleExpander
 
 
 private class FunctionBlock[A <: Data, B <: Data](gens: (A,B), fun: A => B, delay: Int)(implicit delayElementConfig: DelayElementConfig) extends RawModule {

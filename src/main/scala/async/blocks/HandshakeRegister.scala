@@ -1,9 +1,9 @@
 package async.blocks
 
 import async._
-import async.Helper._
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
+import helpers.Hardware.ToggleReg
 
 class HandshakeRegister[T <: Data](gen: T, init: HandshakeInitializer[T]) extends Module {
 

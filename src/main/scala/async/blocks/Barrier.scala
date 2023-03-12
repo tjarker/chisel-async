@@ -1,7 +1,7 @@
 package async.blocks
 
+import helpers._
 import async._
-import async.Helper._
 import chisel3._
 
 private class Barrier[T <: Data](gen:  T) extends Module {

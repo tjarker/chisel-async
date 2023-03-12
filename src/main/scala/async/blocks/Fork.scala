@@ -1,9 +1,10 @@
 package async.blocks
 
 import async._
-import async.Helper._
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
+import helpers.BundleExpander
+import helpers.Hardware.ToggleReg
 
 private class Fork[T <: Data](n: Int, gen: T) extends Module {
 

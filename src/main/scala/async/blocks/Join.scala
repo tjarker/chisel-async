@@ -1,9 +1,11 @@
 package async.blocks
 
 import async._
-import async.Helper._
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
+import helpers.{BundleExpander, SeqToChiselVec}
+import helpers.Hardware.ToggleReg
+import helpers.Types.Pair
 
 
 

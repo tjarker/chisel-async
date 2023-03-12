@@ -1,11 +1,13 @@
 package async.examples
 
 import async._
-import async.Helper.{Pair, SetReg, ToggleReg, risingEdge, synchronize}
 import async.blocks.FunctionBlock.FunctionBlockExtension
 import async.blocks.{Barrier, Fork, HandshakeRegister, HandshakeRegisterNext, Join}
 import async.primitives.DelayElement
 import chisel3._
+import helpers.Hardware.{SetReg, ToggleReg, bruteForceSynchronize, risingEdge}
+import helpers.EmitVerilog
+import helpers.Types.Pair
 
 
 class Fibonacci(sim: Boolean) extends Module {
@@ -40,11 +42,11 @@ class FibonacciTop extends Module {
   val fib = Module(new Fibonacci(false))
   fib.io.out <> io.out
 
-  val toggleAck = ToggleReg(0.B, risingEdge(synchronize(io.out.ack)))
+  val toggleAck = ToggleReg(0.B, risingEdge(bruteForceSynchronize(io.out.ack)))
   fib.io.out.ack := toggleAck
   io.ack := toggleAck
-  fib.io.start := synchronize(io.start)
+  fib.io.start := bruteForceSynchronize(io.start)
 
 }
 
-object Fibonacci extends App { emitVerilog(new FibonacciTop) }
+object Fibonacci extends EmitVerilog(new FibonacciTop)

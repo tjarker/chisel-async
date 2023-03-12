@@ -4,21 +4,21 @@ import async.HandshakeTesting._
 import chisel3._
 import chisel3.experimental.BundleLiterals.AddBundleLiteralConstructor
 import chiseltest._
+import helpers.Types.{Coordinate, GridBuilder}
 import noc.Direction.{East, NorthWest}
-import noc.Helper.GridBuilder
 import org.scalatest.flatspec.AnyFlatSpec
 
 class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
 
   "Demux" should "route packets" in {
 
-    val p = NocParameters(8 by 8)
+    val p = NocParameters(8 by 8, () => UInt(8.W))
     val localCoordinate = Coordinate(p.size, 4.U, 3.U)
     val inDir = NorthWest
-    val route = Route(inDir)
+    val route = RoutingRule(inDir)
 
 
-    test(new Demux(route.options, UInt(8.W), p, localCoordinate, route.routingTable)).withAnnotations(Seq(
+    test(new Demux(route.options, localCoordinate, route.routingTable)(p)).withAnnotations(Seq(
      IcarusBackendAnnotation,
       WriteVcdAnnotation
     )) { dut =>
@@ -31,7 +31,7 @@ class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
       dut.io.out.foreach(_.initSink(dut.clock))
 
       fork {
-        dut.io.in.send((new Packet(UInt(8.W), p)).Lit(
+        dut.io.in.send((new Packet()(p)).Lit(
           _.header.destination -> Coordinate(p.size, 5.U, 3.U),
           _.header.sign.dx -> 1.B,
           _.header.sign.dy -> 1.B,

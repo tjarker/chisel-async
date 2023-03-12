@@ -1,9 +1,10 @@
 package async.blocks
 
-import async.Helper.ToggleReg
-import async._
+import async.Handshake
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
+import helpers.Hardware.ToggleReg
+
 class Source[T <: Data](token: T) extends Module {
 
   val o = IO(Handshake(chiselTypeOf(token)))

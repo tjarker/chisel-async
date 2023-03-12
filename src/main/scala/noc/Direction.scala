@@ -73,4 +73,6 @@ object Direction {
   case object West extends Direction
 
   case object NorthWest extends Direction
+
+  def all: Seq[Direction] = Seq(Local, North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest)
 }

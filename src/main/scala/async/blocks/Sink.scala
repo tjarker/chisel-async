@@ -1,9 +1,9 @@
 package async.blocks
 
-import async.Helper.ToggleReg
 import async._
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
+import helpers.Hardware.ToggleReg
 
 class Sink[T <: Data](gen: T) extends Module {
 
