@@ -5,6 +5,9 @@ import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
 import helpers.Hardware.ToggleReg
 import helpers.Types.Coordinate
+import noc.Channel.{InboundChannel, OutboundChannel}
+import noc.Direction.Local
+import noc.RoutingRule.TerminatorRule
 
 class Demux[P <: Data](
                         localCoordinate: Coordinate, // coordinate of router
@@ -15,6 +18,8 @@ class Demux[P <: Data](
     val in = Flipped(Handshake(Packet()))
     val out = Vec(routingRule.options, Handshake(Packet()))
   })
+
+  println(s"Demux at ${localCoordinate.x}, ${localCoordinate.y} with ${routingRule.options} options")
 
   // create enable signals for output channels based on the incoming header and the local coordinate
   val (outDirections, enableSignals) = routingRule.createLogic(io.in.data.header, localCoordinate)
@@ -46,10 +51,15 @@ class Demux[P <: Data](
 
 object Demux {
 
-  def apply[P <: Data](localCoordinate: Coordinate)(inbound: InboundChannel[P])(implicit p: NocParameters[P]): Seq[OutboundChannel[P]] =  {
-    val demux = Module(new Demux(localCoordinate, RoutingRule(inbound.origin)))
-    demux.io.in <> inbound.channel
-    demux.outDirections.zip(demux.io.out).map { case (dir, channel) => OutboundChannel(dir, channel) }
+  def apply[P <: Data](localCoordinate: Coordinate, position: Position)(inbound: InboundChannel[P])(implicit p: NocParameters[P]): Seq[OutboundChannel[P]] =  {
+    println(inbound.origin)
+    RoutingRule(inbound.origin, position) match {
+      case TerminatorRule() => Seq(OutboundChannel(Local, inbound.channel))
+      case rule =>
+        val demux = Module(new Demux(localCoordinate, rule))
+        demux.io.in <> inbound.channel
+        demux.outDirections.zip(demux.io.out).map { case (dir, channel) => OutboundChannel(dir, channel) }
+    }
   }
 
 }

@@ -53,20 +53,32 @@ package object helpers {
   }
 
   implicit class TreeReducer[T](xs: Seq[T]) {
+
+    def splitInHalf: (Seq[T], Seq[T]) = {
+      val (lower, upper) = xs.zipWithIndex.span(_._2 <= xs.length / 2)
+      lower.map(_._1) -> upper.map(_._1)
+    }
     def reduceTree(f: (T, T) => T): T = {
+      println(xs)
       xs match {
+        case Seq() => throw new Exception("this should not happen")
         case Seq(x) => x
         case Seq(x, y) => f(x, y)
-        case _ => xs
-        .grouped(2)
-        .map(_.reduceTree(f))
-        .toSeq
-        .reduceTree(f)
+        case _ =>
+          val (firstHalf, secondHalf) = xs.splitInHalf
+          f(firstHalf.reduceTree(f), secondHalf.reduceTree(f))
       }
     }
   }
 
 
+
+
+object OptionalIO {
+
+  def apply[T <: Data](gen: T, cond: Boolean): Option[T] = if(cond) Some(gen) else None
+
+}
 
 
 }

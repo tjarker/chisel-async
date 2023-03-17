@@ -1,5 +1,6 @@
 package noc
 
+import scala.util.matching.Regex.Match
 
 
 abstract class Direction {
@@ -14,6 +15,22 @@ abstract class Direction {
   }
   def isHorizontal = this match {
     case East | West => true
+    case _ => false
+  }
+  def isOnNorthSide: Boolean = this match {
+    case NorthWest | North | NorthEast => true
+    case _ => false
+  }
+  def isOnEastSide: Boolean = this match {
+    case NorthEast | East | SouthEast => true
+    case _ => false
+  }
+  def isOnSouthSide: Boolean = this match {
+    case SouthEast | South | SouthWest => true
+    case _ => false
+  }
+  def isOnWestSide: Boolean = this match {
+    case NorthWest | West | SouthWest => true
     case _ => false
   }
   def horizontalNeighbor = if(this.clockwiseNeighbor.isHorizontal) this.clockwiseNeighbor else this.counterClockwiseNeighbor
