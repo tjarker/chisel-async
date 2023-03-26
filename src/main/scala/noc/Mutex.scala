@@ -30,14 +30,15 @@ class MutexBox extends BlackBox with HasBlackBoxInline {
 
 class Mutex extends Module {
     val io = IO(new Bundle {
-    val req1 = Input(UInt(1.W))
-    val req2 = Input(UInt(1.W))
-    val grant1 = Output(UInt(1.W))
-    val grant2 = Output(UInt(1.W))
+    val req = Vec(2, Input(UInt(1.W)))
+    val grant = Vec(2, Output(UInt(1.W)))
   })
     val m = Module(new MutexBox())
-    m.io.req1 := io.req1
-    m.io.req2 := io.req2
-    io.grant1 := m.io.grant1
-    io.grant2 := m.io.grant2
+    m.io.req1 := io.req(0)
+    m.io.req2 := io.req(1)
+    io.grant(0) := m.io.grant1
+    io.grant(1) := m.io.grant2
+}
+object Mutex extends App{
+  emitVerilog (new Mutex())
 }
