@@ -8,6 +8,6 @@ object NocBuilder {
     val nocIO: Port[P]
   }
 
-  def apply[P <: Data](p: NocParameters[P], modules: Seq[Seq[Module with NocInterface[P]]]): Unit = ???
+  def apply[P <: Data](p: NocParameters[P], modules: Seq[Seq[RawModule with NocInterface[P]]]): Unit = ???
 
 }
