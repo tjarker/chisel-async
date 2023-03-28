@@ -15,10 +15,10 @@ class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
     val p = NocParameters(8 by 8, () => UInt(8.W))
     val localCoordinate = Coordinate(p.size, 4.U, 3.U)
     val inDir = NorthWest
-    val route = RoutingRule(inDir)
+    val route = RoutingRule(inDir, Inside)
 
 
-    test(new Demux(route.options, localCoordinate, route.createLogic)(p)).withAnnotations(Seq(
+    test(new Demux(localCoordinate, route)(p)).withAnnotations(Seq(
      IcarusBackendAnnotation,
       WriteVcdAnnotation
     )) { dut =>
@@ -44,5 +44,6 @@ class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
 
     }
   }
+
 
 }
