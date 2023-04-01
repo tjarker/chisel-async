@@ -14,6 +14,16 @@ object Hardware {
     }
   }
 
+  object SetRegWithValue {
+    def apply(value: Bool, event: Bool): Bool = {
+      val setReg = RegInit(0.B)
+      when(event) {
+        setReg := value
+      }
+      setReg
+    }
+  }
+
   object ToggleReg {
     def apply(init: Bool, event: Bool = 1.B): Bool = {
       val toggleReg = RegInit(init)
