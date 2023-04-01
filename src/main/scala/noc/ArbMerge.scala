@@ -56,7 +56,7 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
     for (i <- 0 until 2) {
       //click if mutex grants
       clickIn(i) := m.io.grant(i)
-        .addSimulationDelay(2)
+        .addSimulationDelay(1)
       withClockAndReset(clickIn(i)(0).asClock, reset.asAsyncReset) {
         //send feedback about request
         grantReleased(i) := ToggleReg(0.B)
