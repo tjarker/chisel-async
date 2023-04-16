@@ -1,6 +1,7 @@
 package noc
 
-import async.Handshake
+import async.{Empty, Handshake}
+import async.blocks.{HandshakeRegister, HandshakeRegisterNext}
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
 import helpers.Hardware.ToggleReg
@@ -11,18 +12,21 @@ import noc.RoutingRule.TerminatorRule
 
 class Demux[P <: Data](
                         localCoordinate: Coordinate, // coordinate of router
-                        routingRule: RoutingRule // description of routing options
+                        routingRule: RoutingRule, // description of routing options
+                        registerInput: Boolean = false
                       )(implicit p: NocParameters[P]) extends Module {
 
   val io = IO(new Bundle {
     val in = Flipped(Handshake(Packet()))
-    val out = Vec(routingRule.options, Handshake(Packet()))
+    val out = Vec(routingRule.options.length, Handshake(Packet()))
   })
 
   println(s"Demux at ${localCoordinate.x}, ${localCoordinate.y} with ${routingRule.options} options")
 
+  val in = if(registerInput) HandshakeRegisterNext(io.in, Empty) else io.in
+
   // create enable signals for output channels based on the incoming header and the local coordinate
-  val (outDirections, enableSignals) = routingRule.createLogic(io.in.data.header, localCoordinate)
+  val (outDirections, enableSignals) = routingRule.createLogic(in.data.header, localCoordinate)
 
   // the input stage clicks if all output channels are stable (req == ack)
   val clickIn = io.out
@@ -31,11 +35,11 @@ class Demux[P <: Data](
     .addSimulationDelay(1)
 
   // the output stage clicks if the request signal toggles
-  val clickOut = (io.in.req =/= io.in.ack)
+  val clickOut = (in.req =/= in.ack)
     .addSimulationDelay(1)
 
   withClockAndReset(clickIn.asClock, reset.asAsyncReset) {
-    io.in.ack := ToggleReg(0.B)
+    in.ack := ToggleReg(0.B)
   }
 
   withClockAndReset(clickOut.asClock, reset.asAsyncReset) {
@@ -43,7 +47,7 @@ class Demux[P <: Data](
       .zip(io.out)
       .foreach { case (takeRoute, port) =>
         port.req := ToggleReg(0.B, takeRoute) // phase register only toggles if its route should be taken
-        port.data := io.in.data
+        port.data := in.data
       }
   }
 }

@@ -5,6 +5,7 @@ import chisel3._
 import firrtl.AnnotationSeq
 
 import scala.language.implicitConversions
+import scala.util.Random
 
 package object helpers {
 
@@ -79,6 +80,30 @@ object OptionalIO {
   def apply[T <: Data](gen: T, cond: Boolean): Option[T] = if(cond) Some(gen) else None
 
 }
+
+  def pow2(x: Int): Int = math.pow(2, x).toInt
+
+  implicit class RandomExtension(r: Random.type) {
+    def nextInt(range: Range): Int = range.start + Random.nextInt(range.size)
+
+    def nextPow2(range: Range): Int = {
+      val max = log2Ceil(range.end)
+      val min = log2Ceil(range.start)
+      pow2(nextInt(min to max))
+    }
+
+    def choose[T](xs: Seq[T]): T = xs.apply(Random.nextInt(xs.length))
+
+    def nextUInt(range: Range): UInt = nextInt(range).U
+
+    def nextBool(): Bool = Random.nextBoolean().B
+
+    def nextUInt(width: Width): UInt = {
+      val max = pow2(width.get.toInt)
+      nextUInt(0 until max)
+    }
+
+  }
 
 
 }

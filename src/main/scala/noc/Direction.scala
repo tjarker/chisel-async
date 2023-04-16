@@ -1,6 +1,7 @@
 package noc
 
-import scala.util.matching.Regex.Match
+import scala.util.Random
+import helpers._
 
 
 abstract class Direction {
@@ -92,4 +93,6 @@ object Direction {
   case object NorthWest extends Direction
 
   def all: Seq[Direction] = Seq(Local, North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest)
+
+  def random(): Direction = Random.choose(all)
 }

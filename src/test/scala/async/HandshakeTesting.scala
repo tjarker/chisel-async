@@ -3,6 +3,8 @@ package async
 import chisel3._
 import chiseltest._
 
+import scala.collection.mutable.ListBuffer
+
 object HandshakeTesting {
 
 
@@ -74,6 +76,15 @@ object HandshakeTesting {
       payload
     }
 
+    def receive(n: Int): Unit = {
+      for(_ <- 0 until n) receive()
+    }
+
+    def receiveAndThen(f: T => Any): Unit = {
+      val t = receive()
+      f(t)
+    }
+
     def receiveSeq(n: Int): Seq[T] = {
       Seq.fill(n)(receive())
     }
@@ -88,6 +99,20 @@ object HandshakeTesting {
     def receiveExpect(data: Seq[T]): Unit = {
       for(elem <- data) {
         receiveExpect(elem)
+      }
+    }
+
+    def receiveExpectUnordered(data: Seq[T]): Unit = {
+      val remaining = ListBuffer.from(data)
+      while(remaining.nonEmpty) {
+        waitForToken()
+        val payload = x.data.peek()
+        remaining.find(_ == payload) match {
+          case Some(value) => remaining -= value
+          case None => x.data.expect(remaining.head, "Unexpected Message")
+        }
+        getSinkClock.step(1)
+        x.ack.poke((!x.ack.peekBoolean()).B)
       }
     }
 

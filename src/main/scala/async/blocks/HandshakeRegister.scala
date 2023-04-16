@@ -18,7 +18,7 @@ class HandshakeRegister[T <: Data](gen: T, init: HandshakeInitializer[T]) extend
     i.ack := ToggleReg(0.B)
     o.req := ToggleReg(init.hasToken.B)
     o.data := (init match {
-      case Empty => RegNext(i.data)
+      case Empty => RegNext(i.data, 0.U.asTypeOf(gen))
       case Token(value) => RegNext(i.data, value)
     })
 

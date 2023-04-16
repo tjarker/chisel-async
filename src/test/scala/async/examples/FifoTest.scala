@@ -8,7 +8,9 @@ import org.scalatest.flatspec.AnyFlatSpec
 class FifoTest extends AnyFlatSpec with ChiselScalatestTester {
 
   "Fifo" should "forward tokens" in {
-    test(new Fifo(4, 8.W)).withAnnotations(Seq(IcarusBackendAnnotation, WriteVcdAnnotation)) { dut =>
+    test(new Fifo(4, 8.W))
+      .withAnnotations(Seq(IcarusBackendAnnotation)) { dut =>
+
       dut.clock.setTimeout(10000)
       dut.io.in.initSource(dut.clock)
       dut.io.out.initSink(dut.clock)

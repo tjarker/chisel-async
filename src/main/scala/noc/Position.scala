@@ -1,6 +1,9 @@
 package noc
 
+
+
 abstract class Position {
+  import noc.Position._
   def isCorner = this match {
     case NorthEasternCorner | SouthEasternCorner | SouthWesternCorner | NorthWesternCorner => true
     case _ => false
@@ -13,22 +16,40 @@ abstract class Position {
     case EasternEdge | WesternEdge => true
     case _ => false
   }
+
+  def hasPort(dir: Direction): Boolean = (this, dir) match {
+    case (NorthernEdge, dir) if dir.isOnNorthSide => false
+    case (EasternEdge, dir) if dir.isOnEastSide => false
+    case (SouthernEdge, dir) if dir.isOnSouthSide => false
+    case (WesternEdge, dir) if dir.isOnWestSide => false
+    case (NorthEasternCorner, dir) if dir.isOnNorthSide || dir.isOnEastSide => false
+    case (SouthEasternCorner, dir) if dir.isOnEastSide || dir.isOnSouthSide => false
+    case (SouthWesternCorner, dir) if dir.isOnSouthSide || dir.isOnWestSide => false
+    case (NorthWesternCorner, dir) if dir.isOnWestSide || dir.isOnNorthSide => false
+    case _ => true
+  }
+
 }
 
-case object Inside extends Position
+object Position {
 
-case object NorthernEdge extends Position
+  case object Inside extends Position
 
-case object EasternEdge extends Position
+  case object NorthernEdge extends Position
 
-case object SouthernEdge extends Position
+  case object EasternEdge extends Position
 
-case object WesternEdge extends Position
+  case object SouthernEdge extends Position
 
-case object NorthEasternCorner extends Position
+  case object WesternEdge extends Position
 
-case object SouthEasternCorner extends Position
+  case object NorthEasternCorner extends Position
 
-case object SouthWesternCorner extends Position
+  case object SouthEasternCorner extends Position
 
-case object NorthWesternCorner extends Position
+  case object SouthWesternCorner extends Position
+
+  case object NorthWesternCorner extends Position
+  def all: Seq[Position] = Seq(Inside, NorthernEdge, EasternEdge, SouthernEdge, WesternEdge, NorthEasternCorner, SouthEasternCorner, SouthWesternCorner, NorthWesternCorner)
+}
+

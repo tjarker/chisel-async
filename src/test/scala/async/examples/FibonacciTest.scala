@@ -9,7 +9,9 @@ import org.scalatest.flatspec.AnyFlatSpec
 class FibonacciTest extends AnyFlatSpec with ChiselScalatestTester {
 
   "Fibonacci" should "produce fibonacci sequence" in {
-    test(new Fibonacci(true)).withAnnotations(Seq(IcarusBackendAnnotation, WriteVcdAnnotation)) { dut =>
+    test(new Fibonacci(true))
+      .withAnnotations(Seq(IcarusBackendAnnotation, WriteVcdAnnotation)) { dut =>
+
       dut.clock.setTimeout(10000)
       dut.io.out.initSink(dut.clock)
 
