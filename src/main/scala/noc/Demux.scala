@@ -11,17 +11,18 @@ import noc.Direction.Local
 import noc.RoutingRule.TerminatorRule
 
 class Demux[P <: Data](
+                        inDir: Direction,
                         localCoordinate: Coordinate, // coordinate of router
                         routingRule: RoutingRule, // description of routing options
                         registerInput: Boolean = false
                       )(implicit p: NocParameters[P]) extends Module {
 
+  override val desiredName = s"Demux${inDir}_${localCoordinate.x.litValue}_${localCoordinate.y.litValue}"
+
   val io = IO(new Bundle {
     val in = Flipped(Handshake(Packet()))
     val out = Vec(routingRule.options.length, Handshake(Packet()))
   })
-
-  println(s"Demux at ${localCoordinate.x}, ${localCoordinate.y} with ${routingRule.options} options")
 
   val in = if(registerInput) HandshakeRegisterNext(io.in, Empty) else io.in
 
@@ -56,11 +57,10 @@ class Demux[P <: Data](
 object Demux {
 
   def apply[P <: Data](localCoordinate: Coordinate, position: Position)(inbound: InboundChannel[P])(implicit p: NocParameters[P]): Seq[OutboundChannel[P]] =  {
-    println(inbound.origin)
     RoutingRule(inbound.origin, position) match {
       case TerminatorRule() => Seq(OutboundChannel(Local, inbound.channel))
       case rule =>
-        val demux = Module(new Demux(localCoordinate, rule))
+        val demux = Module(new Demux(inbound.origin, localCoordinate, rule)).suggestName(s"Demux${inbound.origin}")
         demux.io.in <> inbound.channel
         demux.outDirections.zip(demux.io.out).map { case (dir, channel) => OutboundChannel(dir, channel) }
     }

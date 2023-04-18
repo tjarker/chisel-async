@@ -9,11 +9,12 @@ import noc.Router.RouterIO
 import Channel._
 import noc.Position.NorthernEdge
 
-class Router[P <: Data](coordinate: Coordinate, position: Position)(implicit p: NocParameters[P]) extends Module {
+class Router[P <: Data](val coordinate: Coordinate, val position: Position)(implicit p: NocParameters[P]) extends Module {
+  override val desiredName = s"Router@$position$coordinate"
 
   val io = IO(RouterIO(position))
 
-  println(io.inbound.map(_.origin))
+  println(s"Router@$position$coordinate")
 
   io.inbound
     .map(_.addHandshakeRegister(Empty)) // add a stage of handshake registers to inbound channels
@@ -41,7 +42,7 @@ object Router {
     val west = Port(West, position)
     val northwest = Port(NorthWest, position)
 
-    private def all: Seq[Port[P]] = Seq(local, north, northeast, east, southeast, south, southwest, west, northwest).collect {
+    def all: Seq[Port[P]] = Seq(local, north, northeast, east, southeast, south, southwest, west, northwest).collect {
       case Some(port) => port
     }
     def inbound: Seq[InboundChannel[P]] = all.map { port => InboundChannel(port.dir, port.inbound) }
@@ -50,7 +51,7 @@ object Router {
     def outboundMap: Map[Direction, Handshake[Packet[P]]] = all.map { port => port.dir -> port.outbound }.toMap
   }
 
-  def apply[P <: Data](coordinate: Coordinate, position: Position)(implicit p: NocParameters[P]): Router[P] = Module(new Router(coordinate, position))
+  def apply[P <: Data](coordinate: Coordinate, position: Position)(implicit p: NocParameters[P]): Router[P] = Module(new Router(coordinate, position)).suggestName(s"Router@$position$coordinate")
 }
 
 object RouterTop extends EmitVerilog({

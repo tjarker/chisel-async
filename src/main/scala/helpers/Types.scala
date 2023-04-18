@@ -65,6 +65,9 @@ object Types {
         case NorthWest => dx < 0 && dy > 0
       }
     }
+    override def toString(): String = s"(${x.litValue}, ${y.litValue})"
+
+    def toInts = (x.litValue.toInt, y.litValue.toInt)
   }
 
   case class LocationConstraint(base: Coordinate, direction: Direction)

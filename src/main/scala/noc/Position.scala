@@ -1,5 +1,7 @@
 package noc
 
+import chisel3._
+import helpers.Types.{Coordinate, Grid}
 
 
 abstract class Position {
@@ -51,5 +53,18 @@ object Position {
 
   case object NorthWesternCorner extends Position
   def all: Seq[Position] = Seq(Inside, NorthernEdge, EasternEdge, SouthernEdge, WesternEdge, NorthEasternCorner, SouthEasternCorner, SouthWesternCorner, NorthWesternCorner)
+
+  def grid(size: Grid): Seq[Seq[Position]] = {
+    val south = SouthWesternCorner +: Seq.fill(size.n - 2)(SouthernEdge) :+ SouthEasternCorner
+    val north = NorthWesternCorner +: Seq.fill(size.n - 2)(NorthernEdge) :+ NorthEasternCorner
+    val middle = WesternEdge +: Seq.fill(size.n - 2)(Inside) :+ EasternEdge
+
+    south +: Seq.fill(size.m - 2)(middle) :+ north
+  }
+  def coordinateGrid(size: Grid): Seq[Seq[(Position, Coordinate)]] = {
+    grid(size).map(_.zipWithIndex).zipWithIndex.map { case (rows, y) =>
+      rows.map { case (pos, x) => pos -> Coordinate(size, x.U, y.U) }
+    }
+  }
 }
 

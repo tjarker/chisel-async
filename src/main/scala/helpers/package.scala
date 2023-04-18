@@ -9,6 +9,21 @@ import scala.util.Random
 
 package object helpers {
 
+  implicit class Zipper2D[T](x: Seq[Seq[T]]) {
+    def zip2d[B](y: Seq[Seq[B]]): Seq[Seq[(T,B)]] = {
+      x.zip(y).map { case (xRow, yRow) =>
+        xRow.zip(yRow)
+      }
+    }
+  }
+
+  implicit class Mapper2D[T](m: Seq[Seq[T]]) {
+    def map2d[B](f: T => B): Seq[Seq[B]] = m.map(_.map(f))
+
+    def tryGet(i: Int, j: Int): Option[T] = {
+      if(j >= 0 && j < m.length && i >= 0 && i < m(j).length) Some(m(j)(i)) else None
+    }
+  }
 
   implicit class BooleanToInt(x: Boolean) {
     def toInt: Int = if (x) 1 else 0
