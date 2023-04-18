@@ -1,0 +1,153 @@
+[*]
+[*] GTKWave Analyzer v3.3.113 (w)1999-2022 BSI
+[*] Mon Apr 17 13:16:32 2023
+[*]
+[dumpfile] "/home/tjarker/onedrive/devel/chisel-async/test_run_dir/RouterInside_should_route_packets_on_ports_Local_North_NorthEast_East_SouthEast_South_SouthWest_West_NorthWest/Router.vcd"
+[dumpfile_mtime] "Mon Apr 17 09:52:50 2023"
+[dumpfile_size] 380267
+[savefile] "/home/tjarker/onedrive/devel/chisel-async/router.gtkw"
+[timestart] 2
+[size] 2240 1321
+[pos] -1 -1
+*-0.950369 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] testbench.
+[treeopen] testbench.Router.
+[treeopen] testbench.Router.arbMergeTree.
+[treeopen] testbench.Router.arbMergeTree.io_out_arbMerge.
+[treeopen] testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.
+[treeopen] testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.
+[sst_width] 520
+[signals_width] 222
+[sst_expanded] 1
+[sst_vpaned_height] 885
+@28
+testbench.Router.clock
+@200
+-
+@28
+testbench.Router.io_local_inbound_req
+testbench.Router.io_local_inbound_ack
+@200
+-
+@28
+testbench.Router.io_north_inbound_req
+testbench.Router.io_north_inbound_ack
+@200
+-
+@28
+testbench.Router.io_northeast_inbound_req
+testbench.Router.io_northeast_inbound_ack
+@200
+-
+@28
+testbench.Router.io_east_inbound_req
+testbench.Router.io_east_inbound_ack
+@200
+-
+@28
+testbench.Router.io_southeast_inbound_req
+testbench.Router.io_southeast_inbound_ack
+@200
+-
+@28
+testbench.Router.io_south_inbound_req
+testbench.Router.io_south_inbound_ack
+@200
+-
+@28
+testbench.Router.io_southwest_inbound_req
+testbench.Router.io_southwest_inbound_ack
+@200
+-
+@28
+testbench.Router.io_west_inbound_req
+testbench.Router.io_west_inbound_ack
+@200
+-
+@28
+testbench.Router.io_northwest_inbound_req
+testbench.Router.io_northwest_inbound_ack
+@200
+-
+-
+-
+-
+@28
+testbench.Router.arbMergeTree.io_in_0_req
+testbench.Router.arbMergeTree.io_in_0_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_1_req
+testbench.Router.arbMergeTree.io_in_1_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_2_req
+testbench.Router.arbMergeTree.io_in_2_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_3_req
+testbench.Router.arbMergeTree.io_in_3_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_4_req
+testbench.Router.arbMergeTree.io_in_4_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_5_req
+testbench.Router.arbMergeTree.io_in_5_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_6_req
+testbench.Router.arbMergeTree.io_in_6_ack
+@200
+-
+@28
+testbench.Router.arbMergeTree.io_in_7_req
+testbench.Router.arbMergeTree.io_in_7_ack
+@200
+-
+-
+-
+-
+-
+-
+@28
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_0_req
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_0_ack
+@200
+-
+-
+@28
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_1_req
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_1_ack
+@200
+-
+-
+@28
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_0_req
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_0_ack
+@200
+-
+-
+@28
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_1_req
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_1_ack
+@200
+-
+-
+@28
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.req1
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.req2
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.o1
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.o2
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.grant1
+@29
+testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.grant2
+[pattern_trace] 1
+[pattern_trace] 0

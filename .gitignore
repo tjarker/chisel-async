@@ -3,7 +3,6 @@
 /target
 /project
 /test_run_dir
-/*.gtkw
 /*.v
 /*.fir
 /*.anno.json

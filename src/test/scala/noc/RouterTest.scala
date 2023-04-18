@@ -42,9 +42,11 @@ class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
      */
 
 
-    s"Router@$pos" should s"route packets on ports ${ports.mkString("(", ",", ")")}" in {
+    s"Router@$pos" should s"route packets on ports ${ports.mkString("(", ", ", ")")}" in {
       test(new Router(start, pos))
         .withAnnotations(Seq(IcarusBackendAnnotation,WriteVcdAnnotation)) { dut =>
+
+          dut.clock.setTimeout(5)
 
           dut.io.inbound.foreach(_.channel.initSource(dut.clock))
           dut.io.outbound.foreach(_.channel.initSink(dut.clock))
