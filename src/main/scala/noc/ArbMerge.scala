@@ -48,10 +48,10 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
 
   val m = Module(new Mutex())
 
-  val grantReleased = Wire(Vec(2,UInt()))
-  val clickOut = Wire(Vec(2, UInt()))
-  val prevState = Wire(Vec(2, UInt()))
-  val clickIn = Wire(Vec(2, UInt()))
+  val grantReleased = Wire(Vec(2,UInt(1.W)))
+  val clickOut = Wire(Vec(2, UInt(1.W)))
+  val prevState = Wire(Vec(2, UInt(1.W)))
+  val clickIn = Wire(Vec(2, UInt(1.W)))
 
     for (i <- 0 until 2) {
       //click if mutex grants
@@ -64,7 +64,9 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
         io.out(i).req := ToggleReg(0.B)
       }
       //is there a new request on the input?
-      clickOut(i) := (!grantReleased(i) & io.in(i).req & !prevState(i)) | (grantReleased(i) & !io.in(i).req & prevState(i))
+      clickOut(i) := ((!grantReleased(i) & io.in(i).req & !prevState(i)) | (grantReleased(i) & !io.in(i).req & prevState(i)))
+        .asBool
+        .addSimulationDelay(1)
 
       withClockAndReset(clickOut(i)(0).asClock, reset.asAsyncReset) {
         //save current state for future request check
