@@ -8,16 +8,19 @@ import helpers.Hardware.ToggleReg
 
 private class Fork[T <: Data](n: Int, gen: T) extends Module {
 
-  val i = IO(Flipped(Handshake(gen)))
-  val o = IO(Vec(n, Handshake(gen)))
+  val io = IO(new Bundle {
+    val in = HandshakeIn(gen)
+    val out = Vec(n, HandshakeOut(gen))
+  })
 
-  private val click = o.map(_.ack =/= i.ack).reduce(_ && _).addSimulationDelay(1)
+
+  val click = io.out.map(_.ack =/= io.in.ack).reduce(_ && _).addSimulationDelay(1)
 
   withClockAndReset(click.asClock, reset.asAsyncReset) {
-    i.ack := ToggleReg(0.B)
-    o.foreach { _.expand(
-      _.req := i.req,
-      _.data := i.data
+    io.in.ack := ToggleReg.init(0.B)
+    io.out.foreach { _.expand(
+      _.req := io.in.req,
+      _.data := io.in.data
     )
     }
   }
@@ -27,7 +30,7 @@ private class Fork[T <: Data](n: Int, gen: T) extends Module {
 object Fork {
   def apply[T <: Data](n: Int, in: Handshake[T]): Vec[Handshake[T]] = {
     val fork = Module(new Fork(n, chiselTypeOf(in.data)))
-    fork.i <> in
-    fork.o
+    fork.io.in <> in
+    fork.io.out
   }
 }

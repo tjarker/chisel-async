@@ -14,7 +14,7 @@ class Fibonacci(sim: Boolean) extends Module {
   implicit val conf = DelayElementConfig(sim, () => DelayElement.Xilinx())
 
   val io = IO(new Bundle {
-    val out = Handshake(UInt(8.W))
+    val out = HandshakeOut(UInt(8.W))
     val start = Input(Bool())
   })
 
@@ -22,19 +22,19 @@ class Fibonacci(sim: Boolean) extends Module {
 
   val r0 = HandshakeRegister(UInt(8.W), Empty)
 
-  val f0 = Fork(2, HandshakeRegisterNext(r0.o, Token(1.U)))
+  val f0 = Fork(2, HandshakeRegisterNext(r0.out, Token(1.U)))
 
   val f1 = Fork(2, Barrier(HandshakeRegisterNext(f0(0), Token(1.U)), run))
   io.out <> f1(0)
 
-  r0.i <> Join(f0(1), f1(1)).applyFunction(10) { case Pair(a,b) => a + b }
+  r0.in <> Join(f0(1), f1(1)).applyFunction(10) { case Pair(a,b) => a + b }
 
 }
 
 class FibonacciTop extends Module {
 
   val io = IO(new Bundle {
-    val out = Handshake(UInt(8.W))
+    val out = HandshakeOut(UInt(8.W))
     val ack = Output(Bool())
     val start = Input(Bool())
   })
@@ -42,7 +42,7 @@ class FibonacciTop extends Module {
   val fib = Module(new Fibonacci(false))
   fib.io.out <> io.out
 
-  val toggleAck = ToggleReg(0.B, risingEdge(bruteForceSynchronize(io.out.ack)))
+  val toggleAck = ToggleReg.init(0.B, risingEdge(bruteForceSynchronize(io.out.ack)))
   fib.io.out.ack := toggleAck
   io.ack := toggleAck
   fib.io.start := bruteForceSynchronize(io.start)

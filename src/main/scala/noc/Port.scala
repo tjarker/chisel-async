@@ -10,8 +10,8 @@ object Port {
 }
 
 class Port[P <: Data](val dir: Direction)(implicit p: NocParameters[P]) extends Bundle {
-  val inbound = Flipped(Handshake(Packet()))
-  val outbound = Handshake(Packet())
+  val inbound = HandshakeIn(Packet())
+  val outbound = HandshakeOut(Packet())
 
   def <>(that: Port[P]): Unit = {
     inbound <> that.outbound

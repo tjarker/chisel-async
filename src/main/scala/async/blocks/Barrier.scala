@@ -7,8 +7,8 @@ import chisel3._
 private class Barrier[T <: Data](gen:  T) extends Module {
 
   val io = IO(new Bundle {
-    val in = Flipped(Handshake(gen))
-    val out = Handshake(gen)
+    val in = HandshakeIn(gen)
+    val out = HandshakeOut(gen)
     val enable = Input(Bool())
   })
 

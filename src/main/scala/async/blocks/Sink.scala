@@ -7,16 +7,16 @@ import helpers.Hardware.ToggleReg
 
 class Sink[T <: Data](gen: T) extends Module {
 
-  val i = IO(Flipped(Handshake(gen)))
+  val in = IO(HandshakeIn(gen))
 
-  private val click = (i.req =/= i.ack).addSimulationDelay(1)
+  val click = (in.req =/= in.ack).addSimulationDelay(1)
 
   withClockAndReset(click.asClock, reset.asAsyncReset) {
-    i.ack := ToggleReg(0.B)
+    in.ack := ToggleReg.init(0.B)
   }
 
 }
 
 object Sink {
-  def apply[T <: Data](in: Handshake[T]): Unit = Module(new Sink(chiselTypeOf(in.data))).i <> in
+  def apply[T <: Data](in: Handshake[T]): Unit = Module(new Sink(chiselTypeOf(in.data))).in <> in
 }

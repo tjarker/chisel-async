@@ -8,30 +8,20 @@ import helpers.Hardware.ToggleReg
 class HandshakeRegister[T <: Data](gen: T, init: HandshakeInitializer[T]) extends Module {
 
 
-  val i = IO(Flipped(Handshake(gen)))
-  val o = IO(Handshake(gen))
+  val in = IO(HandshakeIn(gen))
+  val out = IO(HandshakeOut(gen))
 
-  private val click = (i.req =/= i.ack && o.req === o.ack).addSimulationDelay(1)
+  val click = (in.req =/= in.ack && out.req === out.ack).addSimulationDelay(1)
 
   withClockAndReset(click.asClock, reset.asAsyncReset) {
 
-    i.ack := ToggleReg(0.B)
-    o.req := ToggleReg(init.hasToken.B)
-    o.data := (init match {
-      case Empty => RegNext(i.data, 0.U.asTypeOf(gen))
-      case Token(value) => RegNext(i.data, value)
+    in.ack := ToggleReg.init(0.B)
+    out.req := ToggleReg.init(init.hasToken.B)
+    out.data := (init match {
+      case Empty => RegNext(in.data, 0.U.asTypeOf(gen))
+      case Token(value) => RegNext(in.data, value)
     })
 
-  }
-
-  def ||>(that: HandshakeRegister[T]): HandshakeRegister[T] = {
-    this.o <> that.i
-    that
-  }
-
-  def <||(that: HandshakeRegister[T]): HandshakeRegister[T] = {
-    this.i <> that.o
-    that
   }
 
 }
@@ -43,7 +33,7 @@ object HandshakeRegister {
 object HandshakeRegisterNext {
   def apply[T <: Data](next: Handshake[T], init: HandshakeInitializer[T]): Handshake[T] = {
     val handshakeRegister = HandshakeRegister(chiselTypeOf(next.data), init)
-    handshakeRegister.i <> next
-    handshakeRegister.o
+    handshakeRegister.in <> next
+    handshakeRegister.out
   }
 }

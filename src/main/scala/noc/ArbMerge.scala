@@ -1,5 +1,5 @@
 package noc
-import async.Handshake
+import async.{Handshake, HandshakeIn, HandshakeOut}
 import chisel3._
 import helpers.Hardware.ToggleReg
 import helpers.Hardware.SetRegWithValue
@@ -12,8 +12,8 @@ import helpers.Types.{Coordinate, GridBuilder}
 
 class Merge[P <: Data]()(implicit p:NocParameters[P]) extends Module {
   val io = IO(new Bundle {
-    val in = Vec(2, Flipped(Handshake(Packet())))
-    val out = Handshake(Packet())
+    val in = Vec(2, HandshakeIn(Packet()))
+    val out = HandshakeOut(Packet())
   })
   //new request detected
   val sela = io.in(0).ack  ^ io.in(0).req
@@ -21,7 +21,7 @@ class Merge[P <: Data]()(implicit p:NocParameters[P]) extends Module {
     .addSimulationDelay(1)
   //send request out when new request processed
   withClockAndReset(clickOut.asClock, reset.asAsyncReset) {
-    io.out.req := ToggleReg(0.B)
+    io.out.req := ToggleReg.init(0.B)
     io.out.data := Mux(sela, io.in(0).data, io.in(1).data)
   }
   //ack received after request was sent
@@ -42,8 +42,8 @@ class Merge[P <: Data]()(implicit p:NocParameters[P]) extends Module {
 class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
 
   val io = IO(new Bundle {
-    val in = Vec(2, Flipped(Handshake(Packet())))
-    val out = Vec(2, Handshake(Packet()))
+    val in = Vec(2, HandshakeIn(Packet()))
+    val out = Vec(2, HandshakeOut(Packet()))
   })
 
   val m = Module(new Mutex())
@@ -59,9 +59,9 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
         .addSimulationDelay(1)
       withClockAndReset(clickIn(i)(0).asClock, reset.asAsyncReset) {
         //send feedback about request
-        grantReleased(i) := ToggleReg(0.B)
+        grantReleased(i) := ToggleReg.init(0.B)
         //send request to the output
-        io.out(i).req := ToggleReg(0.B)
+        io.out(i).req := ToggleReg.init(0.B)
       }
       //is there a new request on the input?
       clickOut(i) := ((!grantReleased(i) & io.in(i).req & !prevState(i)) | (grantReleased(i) & !io.in(i).req & prevState(i)))
@@ -70,7 +70,7 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
 
       withClockAndReset(clickOut(i)(0).asClock, reset.asAsyncReset) {
         //save current state for future request check
-        prevState(i) := ToggleReg(0.B)
+        prevState(i) := ToggleReg.init(0.B)
       }
       //request to mutex if input request changed
       m.io.req(i) := io.out(i).ack ^ prevState(i)
@@ -84,8 +84,8 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
 class ArbMerge[P <: Data]()(implicit p: NocParameters[P]) extends Module {
 
   val io = IO(new Bundle {
-    val in = Vec(2, Flipped(Handshake(Packet())))
-    val out = Handshake(Packet())
+    val in = Vec(2, HandshakeIn(Packet()))
+    val out = HandshakeOut(Packet())
   })
   val arbiter = Module(new Arbiter()(p))
   val merge = Module(new Merge()(p))
@@ -112,8 +112,8 @@ class ArbMerge[P <: Data]()(implicit p: NocParameters[P]) extends Module {
 class ArbMergeTree[P <: Data](n: Int)(implicit p: NocParameters[P]) extends Module {
 
   val io = IO(new Bundle {
-    val in = Vec(n, Flipped(Handshake(Packet())))
-    val out = Handshake(Packet())
+    val in = Vec(n, HandshakeIn(Packet()))
+    val out = HandshakeOut(Packet())
   })
 
   io.out <> io.in.reduceTree { (l, r) =>

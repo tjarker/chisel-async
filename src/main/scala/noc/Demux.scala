@@ -1,6 +1,6 @@
 package noc
 
-import async.{Empty, Handshake}
+import async.{Empty, Handshake, HandshakeIn, HandshakeOut}
 import async.blocks.{HandshakeRegister, HandshakeRegisterNext}
 import async.blocks.SimulationDelay.SimulationDelayer
 import chisel3._
@@ -20,8 +20,8 @@ class Demux[P <: Data](
   override val desiredName = s"Demux${inDir}_${localCoordinate.x.litValue}_${localCoordinate.y.litValue}"
 
   val io = IO(new Bundle {
-    val in = Flipped(Handshake(Packet()))
-    val out = Vec(routingRule.options.length, Handshake(Packet()))
+    val in = HandshakeIn(Packet())
+    val out = Vec(routingRule.options.length, HandshakeOut(Packet()))
   })
 
   val in = if(registerInput) HandshakeRegisterNext(io.in, Empty) else io.in
@@ -40,14 +40,14 @@ class Demux[P <: Data](
     .addSimulationDelay(1)
 
   withClockAndReset(clickIn.asClock, reset.asAsyncReset) {
-    in.ack := ToggleReg(0.B)
+    in.ack := ToggleReg.init(0.B)
   }
 
   withClockAndReset(clickOut.asClock, reset.asAsyncReset) {
     enableSignals
       .zip(io.out)
       .foreach { case (takeRoute, port) =>
-        port.req := ToggleReg(0.B, takeRoute) // phase register only toggles if its route should be taken
+        port.req := ToggleReg.init(0.B, takeRoute) // phase register only toggles if its route should be taken
         port.data := in.data
       }
   }

@@ -1,6 +1,6 @@
 package noc
 
-import async.Handshake
+import async.{Handshake, HandshakeOut}
 import async.blocks.{Sink, Source}
 import chisel3._
 import chisel3.experimental.BundleLiterals.AddBundleLiteralConstructor
@@ -62,7 +62,7 @@ class NocTest extends Module {
 
   implicit val p = NocParameters(2 by 2, () => UInt(8.W))
 
-  val io = IO(Handshake(Packet()))
+  val io = IO(HandshakeOut(Packet()))
 
   val dummies = Seq.fill(2,2)(Module(new Dummy))
 

@@ -25,7 +25,7 @@ object Hardware {
   }
 
   object ToggleReg {
-    def apply(init: Bool, event: Bool = 1.B): Bool = {
+    def init(init: Bool, event: Bool = 1.B): Bool = {
       val toggleReg = RegInit(init)
       when(event) {
         toggleReg := !toggleReg

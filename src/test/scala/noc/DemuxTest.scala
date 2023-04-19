@@ -27,7 +27,7 @@ class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
         }
 
       s"Demux@$pos" should s"route packets correctly from $inDir to ${route.options.mkString("(", ", ", ")")}" in {
-        test(new Demux(start, route, true))
+        test(new Demux(inDir, start, route, true))
           .withAnnotations(Seq(IcarusBackendAnnotation)) { dut =>
 
           val outPorts = Map(dut.outDirections.zip(dut.io.out):_*)

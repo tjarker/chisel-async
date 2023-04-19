@@ -8,8 +8,8 @@ import chisel3.internal.firrtl.Width
 class Fifo(depth: Int, width: Width) extends Module {
 
   val io = IO(new Bundle {
-    val in = Flipped(Handshake(UInt(width)))
-    val out = Handshake(UInt(width))
+    val in = HandshakeIn(UInt(width))
+    val out = HandshakeOut(UInt(width))
   })
 
   io.out <> (0 until depth).foldLeft(io.in) { (acc, _) => HandshakeRegisterNext(acc, Empty) }
