@@ -1,5 +1,6 @@
 package helpers
 
+import async.Handshake
 import chisel3._
 import chisel3.experimental.BundleLiterals.AddBundleLiteralConstructor
 import chisel3.experimental.requireIsHardware
@@ -34,6 +35,24 @@ object Types {
           case e: ExpectedHardwareException => new Pair(t1, t2)
         }
       }
+    }
+    def apply[A <: Data, B <: Data](a: Handshake[A], b: Handshake[B]): Pair[Handshake[A], Handshake[B]] = {
+      try {
+        requireIsHardware(a)
+        requireIsHardware(b)
+        val w = Wire(new Pair(chiselTypeOf(a), chiselTypeOf(b))).expand(
+          _._1.req := a.req,
+          _._1.data := a.data,
+          _._2.req := b.req,
+          _._2.data := b.data
+        )
+        a.ack := w._1.ack
+        b.ack := w._2.ack
+        w
+      } catch {
+        case e: ExpectedHardwareException => new Pair(a, b)
+      }
+
     }
 
     def unapply[A <: Data, B <: Data](p: Pair[A, B]): Option[(A, B)] = Some(p._1 -> p._2)

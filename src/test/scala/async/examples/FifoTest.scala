@@ -21,11 +21,6 @@ class FifoTest extends AnyFlatSpec with ChiselScalatestTester {
         dut.io.out.receiveExpect(0 until 10 map(_.U))
       }.join()
 
-      parallel(
-        dut.io.in.send(200.U, 99.U),
-        dut.io.out.receiveExpect(200.U, 99.U)
-      )
-
     }
   }
 

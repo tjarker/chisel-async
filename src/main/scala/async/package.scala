@@ -29,6 +29,10 @@ package object async {
     val data = Output(gen)
   }
 
+  object Handshake {
+    def apply[T <: Data](gen: T) = new Handshake(gen)
+  }
+
   object HandshakeOut {
     def apply[T <: Data](gen: T) = new Handshake(gen)
   }
