@@ -19,11 +19,11 @@ class DemuxTest extends AnyFlatSpec with ChiselScalatestTester {
 
       val start = Coordinate(p.size, pos)
       val route = RoutingRule(inDir, pos)
-      val packets = route
-        .options
-        .map(d => d -> Seq.fill(10)(Coordinate(d of start)))
-        .map { case (d,cs) =>
-          d -> cs.map(c => Packet(start -> c, Random.nextUInt(8.W)))
+      val packets: Seq[(Direction, Seq[Packet[UInt]])] = route.options
+        .map { outDir =>
+          outDir -> Seq.fill(10) {
+            Packet(start -> Coordinate(outDir of start), Random.nextUInt(8.W))
+          }
         }
 
       s"Demux@$pos" should s"route packets correctly from $inDir to ${route.options.mkString("(", ", ", ")")}" in {

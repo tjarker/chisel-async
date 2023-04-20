@@ -21,32 +21,21 @@ class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
     val options = ports.map { port => port -> RoutingRule(port, pos).options }
 
     val packets: Seq[(Direction, Seq[(Direction, Seq[Packet[UInt]])])] = options.map { case (inDir, outDirs) =>
-      inDir -> outDirs
-        .map { outDir =>
-          outDir -> Seq.fill(10)(Coordinate(outDir of start))
-            .map(c => Packet(start -> c, Random.nextUInt(8.W)))
+      inDir -> outDirs.map { outDir =>
+          outDir -> Seq.fill(10) {
+            Packet(start -> Coordinate(outDir of start), Random.nextUInt(8.W))
+          }
         }
     }
 
-    val sendPackets = packets.map { case (inDir, outbox) => inDir -> outbox.flatMap(_._2) }
-    val receivePackets = ports.map { outDir => outDir -> packets.flatMap(_._2).filter(_._1 == outDir).flatMap(_._2) }
-
-    /*
-    packets.foreach { case (inDir, outbox) =>
-      outbox.foreach { case (outDir, packets) =>
-        packets.foreach { p => assert(sendPackets(inDir).contains(p)) }
-        packets.foreach { p => assert(receivePackets(outDir).contains(p)) }
-      }
-    }
-
-     */
-
+    val sendPackets: Seq[(Direction, Seq[Packet[UInt]])] = createOutboxes(packets)
+    val receivePackets: Seq[(Direction, Seq[Packet[UInt]])] = createInboxes(ports, packets)
 
     s"Router@$pos" should s"route packets on ports ${ports.mkString("(", ", ", ")")}" in {
       test(new Router(start, pos))
         .withAnnotations(Seq(IcarusBackendAnnotation,WriteVcdAnnotation)) { dut =>
 
-          dut.clock.setTimeout(5)
+          dut.clock.setTimeout(1)
 
           dut.io.inbound.foreach(_.channel.initSource(dut.clock))
           dut.io.outbound.foreach(_.channel.initSink(dut.clock))
@@ -62,10 +51,9 @@ class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
 
       }
     }
-
-
-
   }
 
+  def createOutboxes(packets: Seq[(Direction, Seq[(Direction, Seq[Packet[UInt]])])]) = packets.map { case (inDir, outbox) => inDir -> Random.shuffle(outbox.flatMap(_._2)) }
+  def createInboxes(ports: Seq[Direction], packets: Seq[(Direction, Seq[(Direction, Seq[Packet[UInt]])])]) = ports.map { outDir => outDir -> packets.flatMap(_._2).filter(_._1 == outDir).flatMap(_._2) }
 
 }
