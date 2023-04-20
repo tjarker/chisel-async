@@ -24,8 +24,8 @@ object TestingUtils {
   }
 
   implicit class ForkExtension(f: TesterThreadList) {
-    def forkForEach[T](xs: Seq[T])(fun: T => Any): TesterThreadList = {
-      xs.foldLeft(f) { case (forkBuilder, item) => forkBuilder.fork(fun(item)) }
+    def forkForEach[T](xs: Seq[T], region: Region = TestdriverMain)(fun: T => Any): TesterThreadList = {
+      xs.foldLeft(f) { case (forkBuilder, item) => forkBuilder.fork.withRegion(region)(fun(item)) }
     }
   }
   object forkForEach {

@@ -14,7 +14,6 @@ class Demux[P <: Data](
                         inDir: Direction,
                         localCoordinate: Coordinate, // coordinate of router
                         routingRule: RoutingRule, // description of routing options
-                        registerInput: Boolean = false
                       )(implicit p: NocParameters[P]) extends Module {
 
   override val desiredName = s"Demux${inDir}_${localCoordinate.x.litValue}_${localCoordinate.y.litValue}"
@@ -24,10 +23,8 @@ class Demux[P <: Data](
     val out = Vec(routingRule.options.length, HandshakeOut(Packet()))
   })
 
-  val in = if(registerInput) HandshakeRegisterNext(io.in, Empty) else io.in
-
   // create enable signals for output channels based on the incoming header and the local coordinate
-  val (outDirections, enableSignals) = routingRule.createLogic(in.data.header, localCoordinate)
+  val (outDirections, enableSignals) = routingRule.createLogic(io.in.data.header, localCoordinate)
 
   // the input stage clicks if all output channels are stable (req == ack)
   val clickIn = io.out
@@ -36,11 +33,11 @@ class Demux[P <: Data](
     .addSimulationDelay(1)
 
   // the output stage clicks if the request signal toggles
-  val clickOut = (in.req =/= in.ack)
+  val clickOut = (io.in.req =/= io.in.ack)
     .addSimulationDelay(1)
 
   withClockAndReset(clickIn.asClock, reset.asAsyncReset) {
-    in.ack := ToggleReg.init(0.B)
+    io.in.ack := ToggleReg.init(0.B)
   }
 
   withClockAndReset(clickOut.asClock, reset.asAsyncReset) {
@@ -48,7 +45,7 @@ class Demux[P <: Data](
       .zip(io.out)
       .foreach { case (takeRoute, port) =>
         port.req := ToggleReg.init(0.B, takeRoute) // phase register only toggles if its route should be taken
-        port.data := in.data
+        port.data := io.in.data
       }
   }
 }
