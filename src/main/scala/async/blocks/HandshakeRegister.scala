@@ -31,8 +31,9 @@ object HandshakeRegister {
 }
 
 object HandshakeRegisterNext {
-  def apply[T <: Data](next: Handshake[T], init: HandshakeInitializer[T]): Handshake[T] = {
+  def apply[T <: Data](next: Handshake[T], init: HandshakeInitializer[T], name: Option[String] = None): Handshake[T] = {
     val handshakeRegister = HandshakeRegister(chiselTypeOf(next.data), init)
+    if(name.isDefined) handshakeRegister.suggestName(name.get)
     handshakeRegister.in <> next
     handshakeRegister.out
   }

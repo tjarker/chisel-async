@@ -7,7 +7,7 @@ object Channel {
 
   case class InboundChannel[P <: Data](origin: Direction, channel: Handshake[Packet[P]]) {
     def addHandshakeRegister(init: HandshakeInitializer[Packet[P]]): InboundChannel[P] =
-      InboundChannel(origin, HandshakeRegisterNext(channel, init))
+      InboundChannel(origin, HandshakeRegisterNext(channel, init, Some(s"HandshakeRegister$origin")))
   }
 
   case class OutboundChannel[P <: Data](heading: Direction, channel: Handshake[Packet[P]]) {

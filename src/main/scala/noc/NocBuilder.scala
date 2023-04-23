@@ -53,18 +53,18 @@ class Dummy()(implicit p: NocParameters[UInt]) extends Module with NocInterface[
 
 
   val sink = Sink(nocIO.inbound)
-  val source = Source(Packet().Lit(_.payload -> 0xFF.U))
-  source <> nocIO.outbound
+  nocIO.outbound.req := 0.B
+  nocIO.outbound.data := DontCare
 
 }
 
 class NocTest extends Module {
 
-  implicit val p = NocParameters(2 by 2, () => UInt(8.W))
+  implicit val p = NocParameters(4 by 4, () => UInt(8.W))
 
   val io = IO(HandshakeOut(Packet()))
 
-  val dummies = Seq.fill(2,2)(Module(new Dummy))
+  val dummies = (Module(new Sender) +: Seq.fill(3)(Module(new Dummy))) +: Seq.fill(3,4)(Module(new Dummy))
 
   val routers = NocBuilder(p, dummies)
 

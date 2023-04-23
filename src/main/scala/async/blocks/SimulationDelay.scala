@@ -15,13 +15,10 @@ private class SimulationDelay(width: Width, delay: Int) extends BlackBox(Map("w"
        | parameter delay = 0
        |)(
        | input [w - 1:0] in,
-       | output reg [w - 1:0] out
+       | output reg [w - 1:0] out = 0
        |);
        |always @(*) begin
        | out <= #delay in;
-       |end
-       |initial begin
-       | out <= in;
        |end
        |endmodule""".stripMargin)
 }

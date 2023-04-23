@@ -12,7 +12,7 @@ class MutexBox extends BlackBox with HasBlackBoxInline {
     val grant1 = Output(UInt(1.W))
     val grant2 = Output(UInt(1.W))
   })
-  setInline("module MutexBox.v",
+  setInline("MutexBox.v",
     s"""module MutexBox(
        |  input req1,
        |  input req2,
@@ -20,10 +20,15 @@ class MutexBox extends BlackBox with HasBlackBoxInline {
        |  output grant2
        |);
        |
-       |wire o1 = ~(req1 & o2);
-       |wire o2 = ~(req2 & o1);
+       |reg o1 = 1;
+       |reg o2 = 1;
        |assign{grant1} = ~o1 & o2;
        |assign{grant2} = ~o2 & o1;
+       |
+       |always @(*) begin
+       |  o1 <= #1 ~(req1 & o2);
+       |  o2 <= #1 ~(req2 & o1);
+       |end
        |
        |endmodule""".stripMargin)
 }

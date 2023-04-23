@@ -58,10 +58,12 @@ class Arbiter[P <: Data]()(implicit p: NocParameters[P]) extends Module {
       clickIn(i) := m.io.grant(i)
         .addSimulationDelay(1)
       withClockAndReset(clickIn(i)(0).asClock, reset.asAsyncReset) {
-        //send feedback about request
-        grantReleased(i) := ToggleReg.init(0.B)
         //send request to the output
         io.out(i).req := ToggleReg.init(0.B)
+      }
+      withClockAndReset((!clickIn(i)(0)).asClock, reset.asAsyncReset) {
+        //send feedback about request
+        grantReleased(i) := ToggleReg.init(0.B)
       }
       //is there a new request on the input?
       clickOut(i) := ((!grantReleased(i) & io.in(i).req & !prevState(i)) | (grantReleased(i) & !io.in(i).req & prevState(i)))
@@ -132,7 +134,7 @@ object ArbMerge {
       case Seq(channel) => channel
       case _ =>
         require(channels.tail.forall(_.heading == channels.head.heading))
-        val arbMergeTree = Module(new ArbMergeTree(channels.length))
+        val arbMergeTree = Module(new ArbMergeTree(channels.length)).suggestName(s"ArbMerge${channels.head.heading}")
         arbMergeTree.io.in.zip(channels).foreach { case (port, channel) => port <> channel.channel }
         OutboundChannel(channels.head.heading, arbMergeTree.io.out)
     }

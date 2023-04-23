@@ -10,7 +10,7 @@ import Channel._
 import noc.Position.NorthernEdge
 
 class Router[P <: Data](val coordinate: Coordinate, val position: Position)(implicit p: NocParameters[P]) extends Module {
-  override val desiredName = s"Router@$position$coordinate"
+  override val desiredName = s"Router@$position"
 
   val io = IO(RouterIO(position))
 

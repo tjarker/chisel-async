@@ -1,153 +1,246 @@
 [*]
-[*] GTKWave Analyzer v3.3.113 (w)1999-2022 BSI
-[*] Mon Apr 17 13:16:32 2023
+[*] GTKWave Analyzer v3.3.114 (w)1999-2023 BSI
+[*] Sun Apr 23 09:10:44 2023
 [*]
-[dumpfile] "/home/tjarker/onedrive/devel/chisel-async/test_run_dir/RouterInside_should_route_packets_on_ports_Local_North_NorthEast_East_SouthEast_South_SouthWest_West_NorthWest/Router.vcd"
-[dumpfile_mtime] "Mon Apr 17 09:52:50 2023"
-[dumpfile_size] 380267
-[savefile] "/home/tjarker/onedrive/devel/chisel-async/router.gtkw"
+[dumpfile] "/home/tjarker/onedrive/devel/chisel-async/test_run_dir/RouterInside_should_route_packets_on_ports_Local_North_NorthEast_East_SouthEast_South_SouthWest_West_NorthWest/RouterInside.vcd"
+[dumpfile_mtime] "Sun Apr 23 09:10:05 2023"
+[dumpfile_size] 702066
+[savefile] "/home/tjarker/onedrive/devel/chisel-async/waveforms/router.gtkw"
 [timestart] 2
-[size] 2240 1321
+[size] 1720 1361
 [pos] -1 -1
-*-0.950369 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-8.487335 415 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] testbench.
-[treeopen] testbench.Router.
-[treeopen] testbench.Router.arbMergeTree.
-[treeopen] testbench.Router.arbMergeTree.io_out_arbMerge.
-[treeopen] testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.
-[treeopen] testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.
-[sst_width] 520
-[signals_width] 222
+[treeopen] testbench.RouterInside.
+[treeopen] testbench.RouterInside.ArbMergeLocal.
+[treeopen] testbench.RouterInside.DemuxEast.
+[sst_width] 406
+[signals_width] 406
 [sst_expanded] 1
-[sst_vpaned_height] 885
+[sst_vpaned_height] 919
 @28
-testbench.Router.clock
+testbench.RouterInside.clock
+testbench.RouterInside.reset
+@200
+-
+@800200
+-inbound
+@28
+testbench.RouterInside.io_local_inbound_req
+testbench.RouterInside.io_local_inbound_ack
+@22
+testbench.RouterInside.io_local_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_local_inbound_req
-testbench.Router.io_local_inbound_ack
+testbench.RouterInside.io_north_inbound_req
+testbench.RouterInside.io_north_inbound_ack
+@22
+testbench.RouterInside.io_north_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_north_inbound_req
-testbench.Router.io_north_inbound_ack
+testbench.RouterInside.io_northeast_inbound_req
+testbench.RouterInside.io_northeast_inbound_ack
+@22
+testbench.RouterInside.io_northeast_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_northeast_inbound_req
-testbench.Router.io_northeast_inbound_ack
+testbench.RouterInside.io_east_inbound_req
+testbench.RouterInside.io_east_inbound_ack
+@22
+testbench.RouterInside.io_east_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_east_inbound_req
-testbench.Router.io_east_inbound_ack
+testbench.RouterInside.io_southeast_inbound_req
+testbench.RouterInside.io_southeast_inbound_ack
+@22
+testbench.RouterInside.io_southeast_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_southeast_inbound_req
-testbench.Router.io_southeast_inbound_ack
+testbench.RouterInside.io_south_inbound_req
+testbench.RouterInside.io_south_inbound_ack
+@22
+testbench.RouterInside.io_south_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_south_inbound_req
-testbench.Router.io_south_inbound_ack
+testbench.RouterInside.io_southwest_inbound_req
+testbench.RouterInside.io_southwest_inbound_ack
+@22
+testbench.RouterInside.io_southwest_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_southwest_inbound_req
-testbench.Router.io_southwest_inbound_ack
+testbench.RouterInside.io_west_inbound_req
+testbench.RouterInside.io_west_inbound_ack
+@22
+testbench.RouterInside.io_west_inbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_west_inbound_req
-testbench.Router.io_west_inbound_ack
+testbench.RouterInside.io_northwest_inbound_req
+testbench.RouterInside.io_northwest_inbound_ack
+@22
+testbench.RouterInside.io_northwest_inbound_data_payload[7:0]
+@1000200
+-inbound
+@200
+-
+@800200
+-outbound
+@28
+testbench.RouterInside.io_local_outbound_req
+testbench.RouterInside.io_local_outbound_ack
+@22
+testbench.RouterInside.io_local_outbound_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.io_northwest_inbound_req
-testbench.Router.io_northwest_inbound_ack
+testbench.RouterInside.io_north_outbound_req
+testbench.RouterInside.io_north_outbound_ack
+@22
+testbench.RouterInside.io_north_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_northeast_outbound_req
+testbench.RouterInside.io_northeast_outbound_ack
+@22
+testbench.RouterInside.io_northeast_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_east_outbound_req
+testbench.RouterInside.io_east_outbound_ack
+@22
+testbench.RouterInside.io_east_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_southeast_outbound_req
+testbench.RouterInside.io_southeast_outbound_ack
+@22
+testbench.RouterInside.io_southeast_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_south_outbound_req
+testbench.RouterInside.io_south_outbound_ack
+@22
+testbench.RouterInside.io_south_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_southwest_outbound_req
+testbench.RouterInside.io_southwest_outbound_ack
+@22
+testbench.RouterInside.io_southwest_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_west_outbound_req
+testbench.RouterInside.io_west_outbound_ack
+@22
+testbench.RouterInside.io_west_outbound_data_payload[7:0]
+@200
+-
+@28
+testbench.RouterInside.io_northwest_outbound_req
+testbench.RouterInside.io_northwest_outbound_ack
+@22
+testbench.RouterInside.io_northwest_outbound_data_payload[7:0]
+@1000200
+-outbound
 @200
 -
 -
 -
 -
+-
+@800200
+-local port arbMergeTree
 @28
-testbench.Router.arbMergeTree.io_in_0_req
-testbench.Router.arbMergeTree.io_in_0_ack
+testbench.RouterInside.ArbMergeLocal.io_in_0_req
+testbench.RouterInside.ArbMergeLocal.io_in_0_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_0_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_1_req
-testbench.Router.arbMergeTree.io_in_1_ack
+testbench.RouterInside.ArbMergeLocal.io_in_1_req
+testbench.RouterInside.ArbMergeLocal.io_in_1_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_1_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_2_req
-testbench.Router.arbMergeTree.io_in_2_ack
+testbench.RouterInside.ArbMergeLocal.io_in_2_req
+testbench.RouterInside.ArbMergeLocal.io_in_2_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_2_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_3_req
-testbench.Router.arbMergeTree.io_in_3_ack
+testbench.RouterInside.ArbMergeLocal.io_in_3_req
+testbench.RouterInside.ArbMergeLocal.io_in_3_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_3_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_4_req
-testbench.Router.arbMergeTree.io_in_4_ack
+testbench.RouterInside.ArbMergeLocal.io_in_4_req
+testbench.RouterInside.ArbMergeLocal.io_in_4_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_4_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_5_req
-testbench.Router.arbMergeTree.io_in_5_ack
+testbench.RouterInside.ArbMergeLocal.io_in_5_req
+testbench.RouterInside.ArbMergeLocal.io_in_5_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_5_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_6_req
-testbench.Router.arbMergeTree.io_in_6_ack
+testbench.RouterInside.ArbMergeLocal.io_in_6_req
+testbench.RouterInside.ArbMergeLocal.io_in_6_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_6_data_payload[7:0]
 @200
 -
 @28
-testbench.Router.arbMergeTree.io_in_7_req
-testbench.Router.arbMergeTree.io_in_7_ack
-@200
--
--
--
--
--
--
-@28
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_0_req
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_0_ack
-@200
--
--
-@28
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_1_req
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_in_1_ack
-@200
--
--
-@28
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_0_req
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_0_ack
+testbench.RouterInside.ArbMergeLocal.io_in_7_req
+testbench.RouterInside.ArbMergeLocal.io_in_7_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_in_7_data_payload[7:0]
 @200
 -
 -
 @28
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_1_req
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.io_out_1_ack
+testbench.RouterInside.ArbMergeLocal.io_out_req
+testbench.RouterInside.ArbMergeLocal.io_out_ack
+@22
+testbench.RouterInside.ArbMergeLocal.io_out_data_payload[7:0]
+@1000200
+-local port arbMergeTree
 @200
 -
 -
-@28
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.req1
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.req2
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.o1
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.o2
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.grant1
-@29
-testbench.Router.arbMergeTree.io_out_arbMerge.arbiter.m.m.grant2
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
 [pattern_trace] 1
 [pattern_trace] 0
