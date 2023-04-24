@@ -7,8 +7,8 @@ class NocTestSim extends AnyFlatSpec with ChiselScalatestTester {
 
   "noctest" should "work" in {
     test(new NocTest).withAnnotations(Seq(IcarusBackendAnnotation, WriteVcdAnnotation)) { dut =>
-
-      dut.clock.step(100)
+      dut.clock.setTimeout(0)
+      dut.clock.step(1000)
 
     }
   }

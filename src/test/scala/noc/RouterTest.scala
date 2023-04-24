@@ -3,20 +3,17 @@ package noc
 import chisel3._
 import chiseltest._
 import helpers.Types.{ConstraintBuilder, Coordinate, GridBuilder}
-import helpers._
 import org.scalatest.flatspec.AnyFlatSpec
 import async.HandshakeTesting._
 import async.TestingUtils.{ForkExtension, forkForEach}
 
-import scala.util.Random
-
 class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
 
-  implicit val p = NocParameters(8 by 8, () => UInt(8.W))
+  implicit val p = NocParameters(8 by 8, () => UInt(16.W))
 
   var id = 0
 
-  Position.all.take(1).foreach { pos =>
+  Position.all.foreach { pos =>
 
     val start = Coordinate(p.size, pos)
     val ports = Direction.all.filter(pos.hasPort)
@@ -25,7 +22,7 @@ class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
     val packets: Seq[(Direction, Seq[(Direction, Seq[Packet[UInt]])])] = options.map { case (inDir, outDirs) =>
       inDir -> outDirs.map { outDir =>
           outDir -> Seq.fill(10) {
-            Packet(start -> Coordinate(outDir of start), {id += 1; (id - 1) % 0xFF}.U)
+            Packet(start -> Coordinate(outDir of start), {id += 1; (id - 1) % 0xFFFF}.U)
           }
         }
     }
@@ -48,12 +45,16 @@ class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
           forkForEach(sendPackets) { case (inDir, packets) =>
             inPorts(inDir).send(packets)
           }.forkForEach(receivePackets) { case (outDir, packets) =>
-            outPorts(outDir).receive(packets.length)
-          }.join()
+            outPorts(outDir).receiveExpectUnordered(packets, samePacket)
+          }.joinAndStep(dut.clock)
 
       }
     }
 
+  }
+
+  def samePacket(a: Packet[UInt], b: Packet[UInt]): Boolean = {
+    a.payload.litValue == b.payload.litValue // TODO: check also header
   }
 
   def createOutbox(packets: Seq[(Direction, Seq[(Direction, Seq[Packet[UInt]])])]): Seq[(Direction, Seq[Packet[UInt]])] = packets.map { case (inDir, outbox) => inDir -> outbox.flatMap(_._2) }
