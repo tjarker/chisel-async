@@ -48,13 +48,19 @@ object NocBuilder {
 
 }
 
-class Dummy()(implicit p: NocParameters[UInt]) extends Module with NocInterface[UInt] {
+
+class Dummy()(implicit p: NocParameters[UInt]) extends Module with NocInterface[UInt]  {
   override val nocIO: Port[UInt] = IO(LocalPort())
 
-
   val sink = Sink(nocIO.inbound)
+  val click = nocIO.inbound.req =/= nocIO.inbound.ack
+  withClockAndReset(click.asClock, reset.asAsyncReset) {
+    val reg = RegNext(nocIO.inbound.data)
+    nocIO.outbound.data := reg
+  }
+
   nocIO.outbound.req := 0.B
-  nocIO.outbound.data := DontCare
+
 
 }
 

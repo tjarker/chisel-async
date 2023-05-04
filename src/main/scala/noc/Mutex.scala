@@ -43,7 +43,7 @@ class MutexBoxTest extends BlackBox with HasBlackBoxInline {
     val grant2 = Output(UInt(1.W))
   })
   setInline("MutexBox.v",
-    s"""module MutexBox(
+    s"""module MutexBoxTest(
        |  input req1,
        |  input req2,
        |  output grant1,
