@@ -4,7 +4,7 @@ import async.{Handshake, HandshakeOut}
 import async.blocks.{Sink, Source}
 import chisel3._
 import chisel3.experimental.BundleLiterals.AddBundleLiteralConstructor
-import helpers.{Mapper2D, OptionExtension}
+import helpers.{Mapper2D, OptionExtension, Zipper2D}
 import helpers.Types.{Coordinate, Grid, GridBuilder}
 import noc.Direction._
 import noc.NocBuilder.NocInterface
@@ -16,8 +16,8 @@ object NocBuilder {
     val nocIO: Port[P]
   }
 
-  def neighbors[P <: Data](routers: Seq[Seq[Router[P]]], coordinate: Coordinate): Map[Direction, Option[Port[P]]] = {
-    val (x,y) = coordinate.toInts
+  private def neighbors[P <: Data](routers: Seq[Seq[Router[P]]], coordinate: Coordinate): Map[Direction, Option[Port[P]]] = {
+    val (x,y) = coordinate.toTuple
     Map(
       North -> routers.tryGet(x, y + 1).andThen(_.io.south.get),
       NorthEast -> routers.tryGet(x + 1, y + 1).andThen(_.io.southwest.get),
@@ -30,11 +30,11 @@ object NocBuilder {
     )
   }
 
-  def apply[P <: Data](p: NocParameters[P], modules: Seq[Seq[RawModule with NocInterface[P]]]): Seq[Seq[Router[P]]] = {
+  def apply[P <: Data](p: NocParameters[P], ports: Seq[Seq[Port[P]]]): Seq[Seq[Router[P]]] = {
 
-    val routers = Position.coordinateGrid(p.size).zip2d(modules).map2d { case ((position, coordinate), module) =>
+    val routers = Position.coordinateGrid(p.size).zip2d(ports).map2d { case ((position, coordinate), port) =>
       val router = Router(coordinate, position)(p)
-      router.io.local.get <> module.nocIO
+      router.io.local.get <> port
       router
     }
 
@@ -45,6 +45,57 @@ object NocBuilder {
 
     routers
   }
+
+  def apply[P <: Data](p: NocParameters[P]): Seq[Seq[Router[P]]] = {
+
+    val routers = Position.coordinateGrid(p.size).map2d { case (position, coordinate) =>
+      val router = Router(coordinate, position)(p)
+      router
+    }
+
+    routers.map2d { router =>
+      val neighbors = NocBuilder.neighbors(routers, router.coordinate)
+      router.io.all.filter(_.dir != Local).foreach(port => port <> neighbors(port.dir).get)
+    }
+
+    routers
+  }
+
+
+}
+
+class Adapter[P <: Data](implicit p: NocParameters[P]) extends Module {
+  val toNoc = IO(LocalPort())
+  val port = IO(LocalPort())
+
+  toNoc.outbound.req := port.inbound.req
+  toNoc.outbound.data := port.inbound.data
+  port.inbound.ack := toNoc.outbound.ack
+
+  port.outbound.req := toNoc.inbound.req
+  port.outbound.data := toNoc.inbound.data
+  toNoc.inbound.ack := port.outbound.ack
+}
+
+
+class NOC[P <: Data](implicit p: NocParameters[P]) extends Module {
+
+  val ports = IO(Vec(p.size.m, Vec(p.size.n, LocalPort())))
+
+  val adapters = Seq.fill(p.size.m, p.size.n)(Module(new Adapter))
+
+  NocBuilder(p, adapters.map2d(_.toNoc))
+
+  ports.zip2d(adapters).map2d { case (port, adapter) =>
+    port.outbound.req := adapter.port.outbound.req
+    port.outbound.data := adapter.port.outbound.data
+    adapter.port.outbound.ack := port.outbound.ack
+
+    adapter.port.inbound.req := port.inbound.req
+    adapter.port.inbound.data := port.inbound.data
+    port.inbound.ack := adapter.port.inbound.ack
+  }
+
 
 }
 
@@ -72,7 +123,7 @@ class NocTest extends Module {
 
   val dummies = (Module(new Sender) +: Seq.fill(3)(Module(new Dummy))) +: Seq.fill(3,4)(Module(new Dummy))
 
-  val routers = NocBuilder(p, dummies)
+  val routers = NocBuilder(p, dummies.map2d(_.nocIO))
 
   io.req := routers(0)(0).io.local.get.outbound.req
   io.data := routers(0)(0).io.local.get.outbound.data

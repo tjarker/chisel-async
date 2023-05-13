@@ -27,6 +27,7 @@ object HandshakeTesting {
 
     def send(data: T): Unit = {
       x.data.poke(data)
+      getSourceClock.step()
       x.req.poke((!x.req.peekBoolean()).B)
       val old = x.ack.peekBoolean()
       while (old == x.ack.peekBoolean()) {
@@ -96,23 +97,40 @@ object HandshakeTesting {
         x.ack.poke((!x.ack.peekBoolean()).B)
     }
 
+    def receiveExpectPartial(data: T): Unit = {
+      waitForToken()
+      x.data.asInstanceOf[Record].expectPartial(data.asInstanceOf[Record])
+      getSinkClock.step()
+      x.ack.poke((!x.ack.peekBoolean()).B)
+    }
+
     def receiveExpect(data: Seq[T]): Unit = {
       for(elem <- data) {
         receiveExpect(elem)
       }
     }
 
-    def receiveExpectUnordered(data: Seq[T], eq: (T,T) => Boolean): Unit = {
+    def receiveExpectPartial(data: Seq[T]): Unit = {
+      for(elem <- data) {
+        receiveExpectPartial(elem)
+      }
+    }
+
+    def receiveExpectUnordered(data: Seq[T], eq: (T,T) => Boolean, fun: T => String = a => "", printAll: Boolean = false): Unit = {
       val remaining = ListBuffer.from(data)
       while(remaining.nonEmpty) {
         waitForToken()
+        getSinkClock.step()
         val payload = x.data.peek()
+        if(printAll) {
+          println(s"${fun(payload)}")
+        }
+
+        //println(s"Remaining: \n\t${remaining.map(fun).mkString("\n\t")}")
         remaining.find(eq(_, payload)) match {
           case Some(value) => remaining -= value
           case None =>
-            println(s"got ${x.data.peek()}")
-            println(s"Remaining ${remaining.mkString("\n")}")
-            //x.data.expect(remaining.head, "Unexpected Message")
+            if(printAll) println(s"Unexpected message ${fun(payload)}")
         }
         getSinkClock.step(1)
         x.ack.poke((!x.ack.peekBoolean()).B)

@@ -86,7 +86,7 @@ object Types {
     }
     override def toString(): String = s"(${x.litValue}, ${y.litValue})"
 
-    def toInts = (x.litValue.toInt, y.litValue.toInt)
+    def toTuple = (x.litValue.toInt, y.litValue.toInt)
   }
 
   case class LocationConstraint(base: Coordinate, direction: Direction)

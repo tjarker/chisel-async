@@ -20,56 +20,18 @@ class MutexBox extends BlackBox with HasBlackBoxInline {
        |  output grant2
        |);
        |
-       |reg o1 = 1;
-       |reg o2 = 1;
+       |reg o1t = 1;
+       |reg o2t = 1;
+       |assign #1 o1 = o1t;
+       |assign #2 o2 = o2t;
        |assign{grant1} = ~o1 & o2;
        |assign{grant2} = ~o2 & o1;
        |
        |always @(*) begin
-       |  o2 = #1 ~(req2 & o1);
+       |  o2t <= ~(req2 & o1);
        |end
        |always @(*) begin
-       |  o1 = #1 ~(req1 & o2);
-       |end
-       |
-       |endmodule""".stripMargin)
-}
-
-class MutexBoxTest extends BlackBox with HasBlackBoxInline {
-  val io = IO(new Bundle {
-    val req1= Input(UInt(1.W))
-    val req2= Input(UInt(1.W))
-    val grant1 = Output(UInt(1.W))
-    val grant2 = Output(UInt(1.W))
-  })
-  setInline("MutexBox.v",
-    s"""module MutexBoxTest(
-       |  input req1,
-       |  input req2,
-       |  output grant1,
-       |  output grant2
-       |);
-       |
-       |reg o1 = 1;
-       |reg o2 = 1;
-       |reg del_req1 = 0;
-       |reg internal_req2 = 0;
-       |assign{grant1} = ~o1 & o2;
-       |assign{grant2} = ~o2 & o1;
-       |
-       |always @(internal_req2 or o1) begin
-       |  o2 = #1 ~(internal_req2 & o1);
-       |end
-       |always @(req1 or o2) begin
-       |  o1 = #1 ~(req1 & o2);
-       |end
-       |
-       |always @(req2 or del_req1 or req1) begin
-       |  internal_req2 <= #1 !(del_req1 & !req1) & req2;
-       |end
-       |
-       |always @(req1) begin
-       |  del_req1 <= #1 req1;
+       |  o1t <= ~(req1 & o2);
        |end
        |
        |endmodule""".stripMargin)
@@ -80,7 +42,7 @@ class Mutex extends Module {
     val req = Vec(2, Input(UInt(1.W)))
     val grant = Vec(2, Output(UInt(1.W)))
   })
-    val m = Module(new MutexBoxTest())
+    val m = Module(new MutexBox())
     m.io.req1 := io.req(0)
     m.io.req2 := io.req(1)
     io.grant(0) := m.io.grant1

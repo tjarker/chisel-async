@@ -11,6 +11,7 @@ import noc.Position.NorthernEdge
 
 class Router[P <: Data](val coordinate: Coordinate, val position: Position)(implicit p: NocParameters[P]) extends Module {
   override val desiredName = s"Router@$position"
+  override def toString: String = s"Router@$position$coordinate"
 
   val io = IO(RouterIO(position))
 

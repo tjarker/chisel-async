@@ -1,7 +1,7 @@
 package noc
 
 import chisel3._
-import helpers.Types.{Coordinate, Grid}
+import helpers.Types.{Coordinate, Grid, GridBuilder}
 
 
 abstract class Position {
@@ -67,4 +67,3 @@ object Position {
     }
   }
 }
-

@@ -15,6 +15,13 @@ package object helpers {
         xRow.zip(yRow)
       }
     }
+    def zipWithIndex2d: Seq[Seq[(T,(Int,Int))]] = {
+      x.zipWithIndex.map { case (row, j) =>
+        row.zipWithIndex.map { case (value, i) =>
+          (value, (i,j))
+        }
+      }
+    }
   }
 
   implicit class Mapper2D[T](m: Seq[Seq[T]]) {

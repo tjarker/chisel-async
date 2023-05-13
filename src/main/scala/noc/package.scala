@@ -33,6 +33,8 @@ package object noc {
       val dx = Bool()
       val dy = Bool()
     }
+
+    def ==(that: Header): Boolean = destination == that.destination && sign.dx.litToBoolean == that.sign.dx.litToBoolean && sign.dy.litToBoolean == that.sign.dy.litToBoolean
   }
 
   object Header {
