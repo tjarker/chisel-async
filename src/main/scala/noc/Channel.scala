@@ -22,6 +22,7 @@ object Channel {
 
     def connect(sink: Seq[OutboundChannel[P]]) = {
       require(x.length == sink.length)
+      require(x.zip(sink).forall { case (a,b) => a.heading == b.heading})
       x.zip(sink).foreach { case (l, r) => l <> r }
     }
   }

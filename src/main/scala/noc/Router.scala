@@ -9,6 +9,8 @@ import noc.Router.RouterIO
 import Channel._
 import noc.Position.NorthernEdge
 
+import scala.util.Random
+
 class Router[P <: Data](val coordinate: Coordinate, val position: Position)(implicit p: NocParameters[P]) extends Module {
   override val desiredName = s"Router@$position"
   override def toString: String = s"Router@$position$coordinate"
@@ -21,6 +23,7 @@ class Router[P <: Data](val coordinate: Coordinate, val position: Position)(impl
     .map(_.addHandshakeRegister(Empty)) // add a stage of handshake registers to inbound channels
     .flatMap(Demux(coordinate, position)(_)) // demux inbound channels to possible outbound channel connections
     .groupByDirection // group outbound channels of same direction
+    .map{a => a.forall(_.heading == a.head.heading); Random.shuffle(a)}
     .map(ArbMerge(_)) // arbitrate between outbound channels of same direction
     .connect(io.outbound)
 

@@ -7,6 +7,8 @@ import org.scalatest.flatspec.AnyFlatSpec
 import async.HandshakeTesting._
 import async.TestingUtils.{ForkExtension, forkForEach}
 
+import scala.util.Random
+
 class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
 
   implicit val p = NocParameters(8 by 8, () => UInt(16.W))
@@ -43,7 +45,7 @@ class RouterTest extends AnyFlatSpec with ChiselScalatestTester {
           val outPorts = dut.io.outboundMap
 
           forkForEach(sendPackets) { case (inDir, packets) =>
-            inPorts(inDir).send(packets)
+            inPorts(inDir).send(Random.shuffle(packets))
           }.forkForEach(receivePackets) { case (outDir, packets) =>
             outPorts(outDir).receiveExpectUnordered(packets, samePacket)
           }.joinAndStep(dut.clock)

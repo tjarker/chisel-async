@@ -34,13 +34,15 @@ object NocBuilder {
 
     val routers = Position.coordinateGrid(p.size).zip2d(ports).map2d { case ((position, coordinate), port) =>
       val router = Router(coordinate, position)(p)
-      router.io.local.get <> port
+      println(port)
+      router.io.local.get.inbound <> port.outbound
+      router.io.local.get.outbound <> port.inbound
       router
     }
 
     routers.map2d { router =>
       val neighbors = NocBuilder.neighbors(routers, router.coordinate)
-      router.io.all.filter(_.dir != Local).foreach(port => port <> neighbors(port.dir).get)
+      router.io.outbound.filter(_.heading != Local).foreach(port => port.channel <> neighbors(port.heading).get.inbound)
     }
 
     routers
@@ -55,7 +57,7 @@ object NocBuilder {
 
     routers.map2d { router =>
       val neighbors = NocBuilder.neighbors(routers, router.coordinate)
-      router.io.all.filter(_.dir != Local).foreach(port => port <> neighbors(port.dir).get)
+      router.io.outbound.filter(_.heading != Local).foreach(port => port.channel <> neighbors(port.heading).get.inbound)
     }
 
     routers
@@ -117,11 +119,11 @@ class Dummy()(implicit p: NocParameters[UInt]) extends Module with NocInterface[
 
 class NocTest extends Module {
 
-  implicit val p = NocParameters(4 by 4, () => UInt(8.W))
+  implicit val p = NocParameters(3 by 3, () => UInt(8.W))
 
   val io = IO(HandshakeOut(Packet()))
 
-  val dummies = (Module(new Sender) +: Seq.fill(3)(Module(new Dummy))) +: Seq.fill(3,4)(Module(new Dummy))
+  val dummies = (Module(new Sender) +: Seq.fill(2)(Module(new Dummy))) +: Seq.fill(2,3)(Module(new Dummy))
 
   val routers = NocBuilder(p, dummies.map2d(_.nocIO))
 
@@ -130,4 +132,4 @@ class NocTest extends Module {
 
 }
 
-object NocTest extends App { emitVerilog(new NocTest) }
+object NocTest extends App { emitVerilog(new NOC()(NocParameters(4 by 4, () => UInt(8.W)))) }

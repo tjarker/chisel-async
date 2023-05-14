@@ -1,8 +1,10 @@
 package noc
 
-import async.{Empty, Handshake, HandshakeIn, HandshakeOut}
+import async.blocks.Delay.BoolDelayer
+import async.{DelayElementConfig, Empty, Handshake, HandshakeIn, HandshakeOut}
 import async.blocks.{HandshakeRegister, HandshakeRegisterNext}
 import async.blocks.SimulationDelay.SimulationDelayer
+import async.primitives.DelayElement.Xilinx
 import chisel3._
 import helpers.Hardware.ToggleReg
 import helpers.Types.Coordinate
@@ -35,6 +37,7 @@ class Demux[P <: Data](
   // the output stage clicks if the request signal toggles
   val clickOut = (io.in.req =/= io.in.ack)
     .addSimulationDelay(1)
+    .addDelay(4)(DelayElementConfig(false, () => Xilinx()))
 
   withClockAndReset(clickIn.asClock, reset.asAsyncReset) {
     io.in.ack := ToggleReg.init(0.B)
