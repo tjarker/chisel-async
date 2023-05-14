@@ -1,6 +1,7 @@
 package noc
 
 import chiseltest._
+import noc.examples.NocTest
 import org.scalatest.flatspec.AnyFlatSpec
 
 class NocTestSim extends AnyFlatSpec with ChiselScalatestTester {
